@@ -1,0 +1,40 @@
+3. Funktionelle krav
+Der er følgende krav til systemet:
+1
+• Der skal være en startmenu (i tekst), hvor brugeren kan vælge mellem at
+o Oprette sig som bruger
+o Logge sig ind som bruger
+• Der skal være en hovedmenu (i tekst), hvor brugeren kan vælge mellem at
+o Søge efter en bestemt film
+o Søge alle film i en kategori
+o Se sin liste over sete film
+o Se sin liste over gemte film
+• Når brugeren får præsenteret en liste over alle film i en kategori, alle sete film
+eller alle gemte film, skal brugeren kunne vælge én af filmene
+• Når brugeren har valgt en film, skal det være muligt at vælge mellem at afspille
+filmen (dette gøres naturligvis ikke ”rigtigt” men blot ved at skrive ”Titanic
+afspilles nu..” eller noget lignende), gemme filmen i sin liste over film, han eller
+hun ønsker at se senere eller slette filmen fra listen over film, han eller hun vil
+se senere. Vælger brugeren at afspille filmen, skal den gemmes i hans eller
+hendes liste over afspillede film.
+• Brugernes login-oplysninger (brugernavn og password) skal gemmes i en fil, så
+de kan indlæses når programmet startes op igen.
+• Der skal være fornuftig håndtering af fejl. Hvis der opstår fejl i programmet
+skal de håndteres passende steder og brugeren skal informeres, hvis det er
+relevant. Overvej hvem fejlen skal kommunikeres til. En IOException (som kan
+opstå, når man læser ind fra en fil) vil fx gøre, at programmet fra brugerens
+synspunkt ikke virker. Hvordan formidler vi til brugeren, at der er opstået en
+fejl?
+Der kan tænkes en masse ekstra features ind, som fx (ikke prioriteret rækkefølge)
+• En bruger vil gerne søge efter film, der har rating større end 8,5
+• En bruger vil gerne søge efter film fra 80’erne
+• Der skal kunne tilføjes og fjernes kategorier på en nem måde, fx ”Christmas”
+eller ”Halloween”
+• Der skal kunne tilføjes film, serier, sæsoner og episoder hvis brugeren er
+administrator
+• Data om brugeres lister skrives ned i en fil, når programmet lukkes.
+• En bruger kan være klassificeret som ”barn” og må således kun se film i
+kategorien ”Family”
+• Der skal kunne tilføjes nye typer medier, som fx e-bøger, lydbøger eller spil
+• I kan lave en grafisk brugergrænseflade med Processing eller med Java Swing
+eller Java FX
