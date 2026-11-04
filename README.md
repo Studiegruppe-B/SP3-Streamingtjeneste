@@ -86,29 +86,6 @@ When a user selects a movie from a list (category, watched or saved), they can:
 
 ---
 
-## 🗂 Project Structure
-
-```
-SP3-Streamingtjeneste/
-├── assets/
-│   ├── filmposters/        # Poster images for movies (100)
-│   └── seriesposters/      # Poster images for series (100)
-├── data/
-│   ├── filmData.csv        # Movie data
-│   └── seriesData.csv      # Series data
-├── doc/
-│   ├── dynamic/
-│   │   └── usecaseDiagram.puml
-│   ├── static/
-│   │   └── objectDiagram.puml
-│   └── functionRequirements
-├── src/
-│   └── Main.java           # Application entry point
-├── concept.pdf             # Original assignment description (Danish)
-└── README.md
-```
-
----
 
 ## 💾 Data
 
