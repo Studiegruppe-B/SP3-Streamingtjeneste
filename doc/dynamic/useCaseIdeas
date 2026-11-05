@@ -1,0 +1,80 @@
+Use Case Ideas
+
+UC1 RegisterUser
+The user is being prompted whether they wish to login, or create a new account.
+
+If the user chooses to login, they are prompted to enter their credentials. If the user inputs INCORRECT credentials, they should be prompted to re-enter their credentials, until we get a match.
+
+If the user chooses to register themselves their credentials should be saved to a csv file for later use.
+
+After registering, the user should be sent back, so they can login.
+
+Rainy day:
+the user inputs a password that is shorter than 6 characters: password creation should have a minimum amount of characters.
+
+
+UC2 StartApplication
+After user creation, the application should fetch all data inside of relative CSV files, and load all movies and series.
+
+	The CSV files are looked through to save all relative categories for later indexing.
+
+
+Rainy day:
+some data inside the CSV files are incorrectly formatted: data that is incorrectly formatted should be skipped, instead of breaking the entire iteration.
+
+UC3 SelectMenuOption
+The user will then be prompted to choose between different functionalities to search for Media.
+
+Rainy day:
+the user quits the application: UC12 is invoked.
+
+
+UC4 SearchByName
+User is prompted to search by name.
+
+Rainy day:
+the user inputs an empty search field: empty searches should always be rejected and should contain a minimum requirement of 1 character!
+
+
+
+UC5 SearchByCategory
+Users are shown all the categories that exist. Users are then shown all the movies/series in a category of their choice.
+
+
+
+
+UC6 ChoseMovie/Series
+The user can click on a movie or series opening options to either “play” “rate” “save” and so on.
+
+
+UC7 PlayMovie
+	After the user has chosen to watch the movie or series the system plays the chosen
+	movie or series.
+
+UC8 ShowWatchHistory
+The user can open a page showing all movies and series they have watched in the past.
+
+
+UC9 SaveMedia
+Adding on UC5 the user gets the option to save a movie to a list they can open later on.
+
+
+UC10 ShowSavedMovies/Series
+The user gets an option to open a list of movies saved for later watch or rewatch.
+
+Rainy day:
+The movie the user is trying to save is already on their “Saved movies” list, the system then informs the user that it can’t be on the list twice and therefore dosen’t add the movie.
+
+UC11 DeleteMovie
+	The user chooses to delete a movie that removes it from the users “Saved movies”.
+Rainy day:
+ The user tries to delete a movie that isn’t on their “Saved movies” list, the 	system then prints out that the movie isn’t on their list.
+
+
+
+UC12 EndSession
+When the user ends his/her session, all their data will be persisted.
+
+
+
+
