@@ -1,6 +1,7 @@
 @startuml
 participant Main
 participant StreamingClass
+participant Media
 participant FileIO
 participant TextUI
 
@@ -11,6 +12,7 @@ StreamingClass -> FileIO : assignUser()
 activate FileIO
 FileIO --> StreamingClass
 deactivate FileIO
+
 
 loop programIsRunning
     StreamingClass -> TextUI : showMenu;
