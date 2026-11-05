@@ -8,9 +8,9 @@ class StreamingService{
 - Arraylist movies
 - Arraylist series
 + startStreamingService()
-+ showMenu()
-+ ArrayList<Movie> getMovie()
-+ ArrayList<Series> getSeries()
+- showMenu()
+- ArrayList<Media> getMediaByName()
+- ArrayList<Media> getMediaByCategory()
 }
 
 
@@ -44,6 +44,8 @@ class User{
 + addToWatch(Media)
 + deleteHistory()
 + deleteFromHistory(Media)
++ Arraylist<Media> showWatchedList()
++ Arraylist<Media> showToWatchList()
 }
 
 package "util"{
