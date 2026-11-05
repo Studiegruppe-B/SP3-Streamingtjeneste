@@ -22,7 +22,8 @@ abstract class Media{
 # int date
 # double rating
 + Media(String, int, ArrayList<String>, double)
-# play()
++ void play()
+
 }
 
 class Movie{
@@ -30,7 +31,7 @@ class Movie{
 }
 
 class Series{
-+ Series(String, int, ArrayList<String>, double, seasons, episodes)
++ Series(String, int, ArrayList<String>, double, int, int )
 - int seasons
 - int episodes
 }
@@ -40,10 +41,10 @@ class User{
 - String password
 - ArrayList<Media> watchedMedia
 - ArrayList<Media> savedMedia
-+ addToHistory(Media)
-+ addToWatchLater(Media)
-+ deleteHistory()
-+ deleteFromHistory(Media)
++ void addToHistory(Media)
++ void addToWatchLater(Media)
++ void deleteHistory()
++ void deleteFromHistory(Media)
 + Arraylist<Media> getWatchedList()
 + Arraylist<Media> getSavedMedia()
 }
