@@ -1,21 +1,21 @@
-import java.util.ArrayList;
+
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class TextUI {
-    Scanner scan = new Scanner(System.in);
+    static Scanner scan = new Scanner(System.in);
 
-    public void userMessage(String msg) {
+    static public void userMessage(String msg) {
         System.out.println(msg);}
 
-    public String promtUser(String promt){
+    static public String promtUser(String promt){
         System.out.println(promt);
         String input = scan.nextLine();
         return input;
     }
 
 
-    public boolean promptBineary(String msg){
+    static public boolean promptBineary(String msg){
         String input = promtUser(msg).toUpperCase();
         if (input.equals("Y")){
             return true;
@@ -28,7 +28,7 @@ public class TextUI {
 
 
 
-    public int promptNumeric(String msg) {
+    static public int promptNumeric(String msg) {
         System.out.println(msg);
         int input = 0;
         try {
