@@ -4,10 +4,13 @@ class Main{
 
 }
 
-class Streaming{
+class StreamingService{
+- Arraylist movies
+- Arraylist series
 + startStreamingService()
-+ searchMovieByName()
-+ searchSeriesByName()
++ showMenu()
++ Arraylist getMovie()
++ Arraylist GetSeries()
 }
 
 
@@ -18,40 +21,47 @@ abstract class Media{
 # Arraylist category
 # int date
 # double rating
++ Media(String, int, Arraylist, double)
 
 # play()
 }
 
 class Movie{
+
 }
 
 class Series{
++ Series(String, int, Arraylist, double, seasons, episodes)
+- int seasons
+- int episodes
 }
 
 class User{
+- String name
+- String password
 - Arraylist watchedMovies
 - Arraylist savedMovies
 }
 
 package "util"{
 class FileIO{
-+ readData()
-+ saveData()
++ readData(String path)
++ saveData(String path)
 }
 
 class TexUI{
 + userMessage()
 + String promptUser()
 + boolean promptBinary()
-+
+
 }
 }
 
-Main *-- Streaming
-Streaming *-- Media
-Streaming *-- FileIO
-Streaming *-- TexUI
-Streaming *-- User
-Media <|.. Movie
-Media <|.. Series
+Main *-- StreamingService
+StreamingService *-- Media
+StreamingService *-- FileIO
+StreamingService *-- TexUI
+StreamingService *-- User
+Media <|-- Movie
+Media <|-- Series
 @enduml
