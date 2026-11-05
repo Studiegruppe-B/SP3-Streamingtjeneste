@@ -1,5 +1,0 @@
-@startuml
-object movie
-object series
-
-@enduml
