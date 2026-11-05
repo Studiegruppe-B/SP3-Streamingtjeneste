@@ -56,9 +56,13 @@ static class FileIO{
 }
 
 static class TexUI{
-+ userMessage()
-+ String promptUser()
-+ boolean promptBinary()
++ void userMessage(String)
++ String promptText(String)
++ boolean promptBinary(String)
++ int promptNumeric(String)
++ ArrayList<String> promptChoice(ArrayList<String>, int, String)
++ void displayList(ArrayList<String>, String, boolean)
++ int promptMenuChoice(ArrayList<String>, String)
 
 }
 }
