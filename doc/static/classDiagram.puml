@@ -5,10 +5,10 @@ class Main{
 }
 
 class StreamingService{
-- Arraylist movies
-- Arraylist series
+- ArrayList<Movie> movies
+- ArrayList<Series> series
 + startStreamingService()
-- showMenu()
+- displayMenu()
 - ArrayList<Media> getMediaByName()
 - ArrayList<Media> getMediaByCategory()
 }
@@ -38,14 +38,14 @@ class Series{
 class User{
 - String name
 - String password
-- ArrayList watchedMovies
-- ArrayList savedMovies
+- ArrayList<Media> watchedMedia
+- ArrayList<Media> savedMedia
 + addToHistory(Media)
-+ addToWatch(Media)
++ addToWatchLater(Media)
 + deleteHistory()
 + deleteFromHistory(Media)
-+ Arraylist<Media> showWatchedList()
-+ Arraylist<Media> showToWatchList()
++ Arraylist<Media> getWatchedList()
++ Arraylist<Media> getSavedMedia()
 }
 
 package "util"{
