@@ -43,7 +43,7 @@ public class TextUI {
         return input;
     }
 
-    public ArrayList<String> promptChoice(ArrayList<String> options, int limit, String msg) {
+    public static ArrayList<String> promptChoice(ArrayList<String> options, int limit, String msg) {
         ArrayList<String> choices = new ArrayList<>();
 
         while (choices.size() < limit) {
@@ -58,7 +58,7 @@ public class TextUI {
         return choices;
     }
 
-    public void displayList(ArrayList<String> list, String msg, boolean numbered) {//parameter der forstæller OM listen er nummereret eller ej.
+    public static void displayList(ArrayList<String> list, String msg, boolean numbered) {//parameter der forstæller OM listen er nummereret eller ej.
         System.out.println(msg);
         for (int i = 0; i < list.size(); i++) {
             if (numbered) {
@@ -69,7 +69,7 @@ public class TextUI {
         }
     }
 
-    public int promptMenuChoice(ArrayList<String> menu, String msg) {
+    public static int promptMenuChoice(ArrayList<String> menu, String msg) {
         displayList(menu, msg, true);
         return promptNumeric("Write a number");
     }
