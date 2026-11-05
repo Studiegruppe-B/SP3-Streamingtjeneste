@@ -1,6 +1,7 @@
 @startuml
 participant Main
 participant StreamingClass
+participant User
 participant Media
 participant FileIO
 participant TextUI
@@ -15,6 +16,9 @@ deactivate FileIO
 
 loop programIsRunning
     StreamingClass -> TextUI : showMenu()
+    activate TextUI
+    TextUI --> StreamingClass : String
+    deactivate TextUI
 end
 
 StreamingClass -> FileIO : saveData()
