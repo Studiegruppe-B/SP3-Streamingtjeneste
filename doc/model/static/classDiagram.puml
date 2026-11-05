@@ -1,0 +1,42 @@
+@startuml
+class Main{
+- startStreaming()
+}
+
+class Streaming{
+
+}
+
+
+
+
+abstract class Media{
+
+}
+
+class Movie{
+}
+
+class Series{
+}
+
+package "util"{
+class FileIO{
++ checkPassword()
++ readMovies()
++ readSeries()
++ saveData()
+}
+
+class TexUI{
++
+}
+}
+
+Main *-- Streaming
+Streaming *-- Media
+Streaming *-- FileIO
+Streaming *-- TexUI
+Media <|.. Movie
+Media <|.. Series
+@enduml
