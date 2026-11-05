@@ -22,7 +22,6 @@ abstract class Media{
 # int date
 # double rating
 + Media(String, int, ArrayList<String>, double)
-
 # play()
 }
 
@@ -41,8 +40,10 @@ class User{
 - String password
 - ArrayList watchedMovies
 - ArrayList savedMovies
-+ addMovie(ArrayList<Movie>, movie)
-+ addSeries(ArrayList<Series>, series)
++ addToHistory(Media)
++ addToWatch(Media)
++ deleteHistory()
++ deleteFromHistory(Media)
 }
 
 package "util"{
