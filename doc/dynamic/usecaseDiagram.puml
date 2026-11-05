@@ -1,0 +1,47 @@
+@startuml
+'https://plantuml.com/use-case-diagram
+
+actor User as U
+usecase RegiserUser as UC1
+usecase StartApplication as UC2
+usecase SelectMenuOption as UC12
+usecase SearchByName as UC3
+usecase SearchByCategory as UC4
+usecase SelectMedia as UC5
+usecase PlayMedia as UC6
+usecase SaveMedia as UC7
+usecase ShowWatchHistory as UC8
+usecase ShowSavedMedia as UC9
+usecase DeleteSavedMedia as UC10
+usecase EndSession as UC11
+
+U --> UC1
+UC12 --> UC11
+UC1 --> UC2
+UC2 --> UC12
+
+UC12 --> UC3
+UC12 --> UC4
+UC12 --> UC8
+UC12 --> UC9
+
+
+
+UC3 --> UC5
+UC4 --> UC5
+UC8 --> UC5
+UC9 --> UC5
+
+UC5 --> UC6
+UC5 --> UC10
+UC5 --> UC7
+
+UC5 --> UC12
+
+UC6 --> UC5
+UC7 --> UC5
+UC10 --> UC5
+
+
+
+@enduml

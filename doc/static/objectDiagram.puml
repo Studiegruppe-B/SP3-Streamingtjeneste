@@ -1,0 +1,15 @@
+@startuml
+'https://plantuml.com/object-diagram
+
+object User
+object StreamingService
+object Media
+object Series
+object Movie
+
+StreamingService --* User
+StreamingService --* Media
+Media <|-- Series
+Media <|-- Movie
+
+@enduml
