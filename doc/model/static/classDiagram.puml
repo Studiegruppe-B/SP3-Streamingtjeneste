@@ -1,17 +1,25 @@
 @startuml
 class Main{
-- startStreaming()
++ static void main(String[] args)
+
 }
 
 class Streaming{
-
++ startStreamingService()
++ searchMovieByName()
++ searchSeriesByName()
 }
 
 
 
 
 abstract class Media{
+# String name
+# Arraylist category
+# int date
+# double rating
 
+# play()
 }
 
 class Movie{
@@ -20,15 +28,21 @@ class Movie{
 class Series{
 }
 
+class User{
+- Arraylist watchedMovies
+- Arraylist savedMovies
+}
+
 package "util"{
 class FileIO{
-+ checkPassword()
-+ readMovies()
-+ readSeries()
++ readData()
 + saveData()
 }
 
 class TexUI{
++ userMessage()
++ String promptUser()
++ boolean promptBinary()
 +
 }
 }
@@ -37,6 +51,7 @@ Main *-- Streaming
 Streaming *-- Media
 Streaming *-- FileIO
 Streaming *-- TexUI
+Streaming *-- User
 Media <|.. Movie
 Media <|.. Series
 @enduml
