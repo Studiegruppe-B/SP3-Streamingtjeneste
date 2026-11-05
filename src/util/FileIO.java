@@ -32,6 +32,7 @@ public final class FileIO {
 
             while (scan.hasNextLine()) {
                 data[counter] = scan.nextLine();
+                counter++;
             }
         } catch (FileNotFoundException e) {
             System.out.println("[FileIO] File not found!");
