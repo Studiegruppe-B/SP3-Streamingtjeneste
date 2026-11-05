@@ -9,8 +9,8 @@ class StreamingService{
 - Arraylist series
 + startStreamingService()
 + showMenu()
-+ Arraylist getMovie()
-+ Arraylist GetSeries()
++ ArrayList<Movie> getMovie()
++ ArrayList<Series> getSeries()
 }
 
 
@@ -21,17 +21,17 @@ abstract class Media{
 # Arraylist category
 # int date
 # double rating
-+ Media(String, int, Arraylist, double)
++ Media(String, int, ArrayList<String>, double)
 
 # play()
 }
 
 class Movie{
-+ Movie(String, int, Arraylist, double)
++ Movie(String, int, ArrayList<String>, double)
 }
 
 class Series{
-+ Series(String, int, Arraylist, double, seasons, episodes)
++ Series(String, int, ArrayList<String>, double, seasons, episodes)
 - int seasons
 - int episodes
 }
@@ -39,19 +39,19 @@ class Series{
 class User{
 - String name
 - String password
-- Arraylist watchedMovies
-- Arraylist savedMovies
-+ addMovie(Arraylist, movie)
-+ addSeries(Arraylist, series)
+- ArrayList watchedMovies
+- ArrayList savedMovies
++ addMovie(ArrayList<Movie>, movie)
++ addSeries(ArrayList<Series>, series)
 }
 
 package "util"{
-class FileIO{
+static class FileIO{
 + readData(String path)
 + saveData(String path)
 }
 
-class TexUI{
+static class TexUI{
 + userMessage()
 + String promptUser()
 + boolean promptBinary()
