@@ -1,16 +1,14 @@
 @startuml
-'https://plantuml.com/object-diagram
+' Create objects
+Object StreamingService
+Object User
+Object Media
+Object Film
+Object Series
 
-object London
-object Washington
-object Berlin
-object NewYork
+StreamingService "1" *-- Media : has-a
+StreamingService *-- "*" User : has-a
+Media <|-- Film : is-a
+Media <|-- Series : is-a
 
-map CapitalCity {
- UK *-> London
- USA *--> Washington
- Germany *---> Berlin
-}
-
-NewYork --> CapitalCity::USA
 @enduml
