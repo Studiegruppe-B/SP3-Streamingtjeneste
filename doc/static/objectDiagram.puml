@@ -1,16 +1,15 @@
 @startuml
 'https://plantuml.com/object-diagram
 
-object London
-object Washington
-object Berlin
-object NewYork
+object User
+object StreamingService
+object Media
+object Series
+object Movie
 
-map CapitalCity {
- UK *-> London
- USA *--> Washington
- Germany *---> Berlin
-}
+StreamingService --* User
+StreamingService --* Media
+Media <|-- Series
+Media <|-- Movie
 
-NewYork --> CapitalCity::USA
 @enduml
