@@ -27,7 +27,7 @@ abstract class Media{
 }
 
 class Movie{
-
++ Movie(String, int, Arraylist, double)
 }
 
 class Series{
@@ -41,6 +41,8 @@ class User{
 - String password
 - Arraylist watchedMovies
 - Arraylist savedMovies
++ addMovie(Arraylist, movie)
++ addSeries(Arraylist, series)
 }
 
 package "util"{
