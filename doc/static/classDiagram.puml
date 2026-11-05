@@ -50,8 +50,9 @@ class User{
 
 package "util"{
 static class FileIO{
-+ readData(String path)
-+ saveData(String path)
++ readData(String)
++ readData(String, int)
++ saveData(String, String, ArrayList<String>)
 }
 
 static class TexUI{
