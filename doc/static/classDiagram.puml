@@ -51,9 +51,9 @@ class User{
 
 package "util"{
 static class FileIO{
-+ readData(String)
-+ readData(String, int)
-+ saveData(String, String, ArrayList<String>)
++ ArrayList<String> readData(String)
++ String[] readData(String, int)
++ void saveData(String, String, ArrayList<String>)
 }
 
 static class TexUI{
