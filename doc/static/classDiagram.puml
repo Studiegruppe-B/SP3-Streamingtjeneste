@@ -5,6 +5,7 @@ class Main{
 }
 
 class StreamingService{
+- String name
 - User user
 - ArrayList<Movie> movies
 - ArrayList<Series> series
