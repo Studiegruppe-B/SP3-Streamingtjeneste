@@ -6,7 +6,7 @@ public class Series extends Media {
     public Series(String name, ArrayList<String> genre, int year, double rating, ArrayList<String> episodes) {
         super(name, genre, year, rating);
 
-        for (String s : episodes) {
+        for (String s : episodes) { // create episodes from given array.
             this.addEpisode(new Episode(this, s));
         }
     }
