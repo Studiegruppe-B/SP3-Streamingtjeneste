@@ -23,6 +23,7 @@ class FileIOTest {
     }
 
     @Test
-    void saveData() {
+    void createFile() {
+        FileIO.createFile("data/player1.csv");
     }
 }
