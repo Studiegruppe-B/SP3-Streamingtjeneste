@@ -53,4 +53,20 @@ public final class FileIO {
             System.out.println("[FileIO] File not found!");
         }
     }
+
+    public static boolean createFile(String path) {
+        try {
+            File file = new File(path);
+
+            if (file.createNewFile()) {
+                System.out.println("[FileIO] Created new file: " + file.getName());
+                return true;
+            } else {
+                System.out.println("[FileIO] File already exists.");
+            }
+        } catch (IOException e) {
+            System.out.println("[FileIO] Could not create new file!");
+        }
+        return false;
+    }
 }
