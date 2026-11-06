@@ -1,15 +1,21 @@
 import java.util.ArrayList;
 
 public class Series extends Media {
-    private ArrayList<String> episodes;
+    private ArrayList<Episode> episodes;
 
     public Series(String name, ArrayList<String> genre, int year, double rating, ArrayList<String> episodes) {
         super(name, genre, year, rating);
-        this.episodes = episodes;
+
+        for (String s : episodes) {
+            this.addEpisode(new Episode(this, s));
+        }
     }
 
-    @Override
-    public void play() {
-        System.out.println("Playing series: " + super.name);
+    private boolean addEpisode(Episode episode) {
+        return this.episodes.add(episode);
+    }
+
+    public ArrayList<Episode> getEpisodes() {
+        return this.episodes;
     }
 }
