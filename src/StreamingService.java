@@ -35,7 +35,7 @@ public class StreamingService {
         String username = TextUI.promptText("Enter your username: ");
         String password = TextUI.promptText("Enter your password: ");
         String correctPassword = FileIO.readData("data/"+username+".csv").get(0);
-        if (password == correctPassword){
+        if (password.equals(correctPassword)){
             this.start();
         }
     }
