@@ -1,4 +1,5 @@
 import util.FileIO;
+import util.TextUI;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -13,6 +14,43 @@ public class StreamingService {
         this.movies = new ArrayList<>();
         this.series = new ArrayList<>();
     }
+
+    public void registerUser(){
+        switch (TextUI.promptNumeric("Log in(1) or create user(2)?")){
+            case 1:
+                userLogIn();
+                break;
+            case 2:
+                createUser();
+                break;
+        }
+
+    }
+
+    public void userLogIn(){
+        String username = TextUI.promptText("Enter your username: ");
+        String password = TextUI.promptText("Enter your password: ");
+        String correctPassword = FileIO.readData("data/"+username+".csv").get(0);
+        if (password == correctPassword){
+            startStreamingService();
+        }
+    }
+
+    public void createUser(){
+        String username = TextUI.promptText("Enter your username: ");
+        String password = TextUI.promptText("Enter your password: ");
+        while (password.length() <= 6){
+            System.out.println("Password is too short, try again");
+            password = TextUI.promptText("Enter your password: ");
+        }
+        ArrayList<String> data = new ArrayList<>();
+        data.add(password);
+        if(FileIO.createFile("data/"+username+".csv")){
+            FileIO.saveData(("data/"+username+".csv"), "Password:", data);
+            userLogIn();
+        }
+    }
+
 
     public void startStreamingService() {
         loadMedia();
