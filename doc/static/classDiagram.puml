@@ -5,12 +5,14 @@ class Main{
 }
 
 class StreamingService{
+- User user
 - ArrayList<Movie> movies
 - ArrayList<Series> series
 + startStreamingService()
 - displayMenu()
 - ArrayList<Media> getMediaByName()
 - ArrayList<Media> getMediaByCategory()
+- void registerUser()
 }
 
 
