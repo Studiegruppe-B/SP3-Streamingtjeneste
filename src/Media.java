@@ -12,6 +12,4 @@ public abstract class Media {
         this.year = year;
         this.rating = rating;
     }
-
-    public abstract void play();
 }
