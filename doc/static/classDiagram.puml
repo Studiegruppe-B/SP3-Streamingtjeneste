@@ -21,6 +21,7 @@ abstract class Media{
 # Arraylist category
 # int date
 # double rating
+# int ID
 + Media(String, int, ArrayList<String>, double)
 + void play()
 
