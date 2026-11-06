@@ -25,7 +25,7 @@ abstract class Media{
 # double rating
 # int ID
 + Media(String, int, ArrayList<String>, double)
-+ void play()
++ abstract void play()
 
 }
 
@@ -55,20 +55,20 @@ class User{
 }
 
 package "util"{
-static class FileIO{
-+ ArrayList<String> readData(String)
-+ String[] readData(String, int)
-+ void saveData(String, String, ArrayList<String>)
+class FileIO{
++ static ArrayList<String> readData(String)
++ static String[] readData(String, int)
++ static void saveData(String, String, ArrayList<String>)
 }
 
-static class TexUI{
-+ void userMessage(String)
-+ String promptText(String)
-+ boolean promptBinary(String)
-+ int promptNumeric(String)
-+ ArrayList<String> promptChoice(ArrayList<String>, int, String)
-+ void displayList(ArrayList<String>, String, boolean)
-+ int promptMenuChoice(ArrayList<String>, String)
+class TexUI{
++ static void userMessage(String)
++ static String promptText(String)
++ static boolean promptBinary(String)
++ static int promptNumeric(String)
++ static ArrayList<String> promptChoice(ArrayList<String>, int, String)
++ static void displayList(ArrayList<String>, String, boolean)
++ static int promptMenuChoice(ArrayList<String>, String)
 
 }
 }
