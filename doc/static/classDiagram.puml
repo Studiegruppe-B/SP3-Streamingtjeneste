@@ -1,0 +1,84 @@
+@startuml
+class Main{
++ static void main(String[] args)
+
+}
+
+class StreamingService{
+- String name
+- User user
+- ArrayList<Movie> movies
+- ArrayList<Series> series
++ startStreamingService()
+- displayMenu()
+- ArrayList<Media> getMediaByName()
+- ArrayList<Media> getMediaByCategory()
+- void registerUser()
+}
+
+
+
+
+abstract class Media{
+# String name
+# Arraylist category
+# int date
+# double rating
+# int ID
++ Media(String, int, ArrayList<String>, double)
++ abstract void play()
+
+}
+
+class Movie{
++ Movie(String, int, ArrayList<String>, double)
+}
+
+class Series{
++ Series(String, int, ArrayList<String>, double, int, int )
+- int seasons
+- int episodes
+}
+
+class User{
+- String name
+- String password
+- ArrayList<Media> watchedMedia
+- ArrayList<Media> savedMedia
++ User(String, String, Arraylist<Media>, Arraylist<Media>)
++ User(String, String)
++ void addToHistory(Media)
++ void addToWatchLater(Media)
++ void deleteHistory()
++ void deleteFromHistory(Media)
++ Arraylist<Media> getWatchedList()
++ Arraylist<Media> getSavedMedia()
+}
+
+package "util"{
+class FileIO{
++ static ArrayList<String> readData(String)
++ static String[] readData(String, int)
++ static void saveData(String, String, ArrayList<String>)
+}
+
+class TexUI{
++ static void userMessage(String)
++ static String promptText(String)
++ static boolean promptBinary(String)
++ static int promptNumeric(String)
++ static ArrayList<String> promptChoice(ArrayList<String>, int, String)
++ static void displayList(ArrayList<String>, String, boolean)
++ static int promptMenuChoice(ArrayList<String>, String)
+
+}
+}
+
+Main *-- StreamingService
+StreamingService *-- Media
+StreamingService *-- FileIO
+StreamingService *-- TexUI
+StreamingService *-- User
+Media <|-- Movie
+Media <|-- Series
+@enduml

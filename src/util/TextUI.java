@@ -16,7 +16,7 @@ public class TextUI {
         return scan.nextLine();
     }
 
-    public static  boolean promptBinary(String msg){
+    public static boolean promptBinary(String msg){
         String input = promptText(msg).toUpperCase();
         if (input.equals("Y")){
             return true;
