@@ -6,13 +6,11 @@ import java.util.Arrays;
 
 public class StreamingService {
     String name;
-    ArrayList<Movie> movies;
-    ArrayList<Series> series;
+    ArrayList<Media> media;
 
     public StreamingService(String name) {
         this.name = name;
-        this.movies = new ArrayList<>();
-        this.series = new ArrayList<>();
+        this.media = new ArrayList<>();
     }
 
     public void start() {
@@ -65,7 +63,7 @@ public class StreamingService {
             ArrayList<String> genre = new ArrayList<>(Arrays.asList(v[2].trim().split(", ")));
             double rating = Double.parseDouble(v[3].trim().replace(",", "."));
 
-            movies.add(new Movie(name, genre, year, rating));
+            media.add(new Movie(name, genre, year, rating));
         }
 
 
@@ -77,7 +75,7 @@ public class StreamingService {
             double rating = Double.parseDouble(v[3].trim().replace(",", "."));
             ArrayList<String> episodes = new ArrayList<>(Arrays.asList(v[4].trim().split(", ")));
 
-            series.add(new Series(name, genre, year, rating, episodes));
+            media.add(new Series(name, genre, year, rating, episodes));
         }
     }
 }
