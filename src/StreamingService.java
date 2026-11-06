@@ -5,8 +5,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class StreamingService {
-    String name;
-    ArrayList<Media> media;
+    private final String name;
+    private final ArrayList<Media> media;
 
     public StreamingService(String name) {
         this.name = name;
