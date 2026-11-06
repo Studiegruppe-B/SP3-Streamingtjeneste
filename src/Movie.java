@@ -3,8 +3,8 @@ import util.TextUI;
 import java.util.ArrayList;
 
 public class Movie extends Media implements Playable {
-    public Movie(String name, ArrayList<String> genre, int year, double rating) {
-        super(name, genre, year, rating);
+    public Movie(String name, String year, String[] genre, double rating) {
+        super(name, year, genre, rating);
     }
 
     @Override

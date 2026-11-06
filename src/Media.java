@@ -2,14 +2,14 @@ import java.util.ArrayList;
 
 public abstract class Media {
     protected String name;
-    protected ArrayList<String> genre;
-    protected int year;
+    protected String[] genre;
+    protected String year;
     protected double rating;
 
-    public Media(String name, ArrayList<String> genre, int year, double rating) {
+    public Media(String name, String year, String[] genre, double rating) {
         this.name = name;
-        this.genre = genre;
         this.year = year;
+        this.genre = genre;
         this.rating = rating;
     }
 }

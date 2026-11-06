@@ -1,5 +1,6 @@
 public class Episode implements Playable {
     private final String episode;
+
     private final Series parent;
 
     public Episode(Series parent, String episode) {
