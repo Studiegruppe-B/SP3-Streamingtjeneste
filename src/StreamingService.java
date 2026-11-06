@@ -14,7 +14,8 @@ public class StreamingService {
     }
 
     public void start() {
-        loadMedia();
+        loadMovieData("data/filmData.csv");
+        loadSeriesData("data/seriesData.csv");
     }
 
     public void registerUser(){
@@ -93,22 +94,6 @@ public class StreamingService {
         }
     }
 
-    private void loadMedia() {
-        ArrayList<String> movieData = FileIO.readData("data/filmData.csv"); // Read movie data.
-        ArrayList<String> seriesData = FileIO.readData("data/seriesData.csv"); // Read series data.
-
-        // Iterate through seriesData.csv, and add to our Media ArrayList
-/*        for (String line : FileIO.readData("data/seriesData.csv")) {
-            String[] v = line.split(";");
-            String name = v[0].trim();
-            int year = Integer.parseInt(v[1].trim().split("-")[0]);
-            ArrayList<String> genre = new ArrayList<>(Arrays.asList(v[2].trim().split(", ")));
-            double rating = Double.parseDouble(v[3].trim().replace(",", "."));
-            ArrayList<String> episodes = new ArrayList<>(Arrays.asList(v[4].trim().split(", ")));
-
-            media.add(new Series(name, genre, year, rating, episodes));
-        }*/
-    }
 
     public boolean addMedia(Media media) {
         return this.media.add(media);
