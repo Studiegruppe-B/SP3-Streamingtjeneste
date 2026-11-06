@@ -15,6 +15,10 @@ public class StreamingService {
         this.series = new ArrayList<>();
     }
 
+    public void start() {
+        loadMedia();
+    }
+
     public void registerUser(){
         switch (TextUI.promptNumeric("Log in(1) or create user(2)?")){
             case 1:
@@ -32,7 +36,7 @@ public class StreamingService {
         String password = TextUI.promptText("Enter your password: ");
         String correctPassword = FileIO.readData("data/"+username+".csv").get(0);
         if (password == correctPassword){
-            startStreamingService();
+            this.start();
         }
     }
 
@@ -51,10 +55,6 @@ public class StreamingService {
         }
     }
 
-
-    public void startStreamingService() {
-        loadMedia();
-    }
 
     private void loadMedia() {
 
