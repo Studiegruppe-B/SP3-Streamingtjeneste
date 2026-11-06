@@ -1,0 +1,21 @@
+@startuml
+participant Main
+participant StreamingClass
+participant FileIO
+participant TextUI
+
+Main -> StreamingClass : startStramingClass()
+activate StreamingClass
+
+StreamingClass -> FileIO : assignUser()
+activate FileIO
+FileIO --> StreamingClass
+deactivate FileIO
+
+loop programIsRunning
+    StreamingClass -> TextUI : showMenu;
+    end
+
+StreamingClass --> Main : stopStreamingClass()
+deactivate StreamingClass
+@enduml
