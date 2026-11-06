@@ -44,6 +44,8 @@ class User{
 - String password
 - ArrayList<Media> watchedMedia
 - ArrayList<Media> savedMedia
++ User(String, String, Arraylist<Media>, Arraylist<Media>)
++ User(String, String)
 + void addToHistory(Media)
 + void addToWatchLater(Media)
 + void deleteHistory()
