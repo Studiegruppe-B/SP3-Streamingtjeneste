@@ -1,10 +1,12 @@
 import java.util.ArrayList;
 
 public class Series extends Media {
-    private ArrayList<Episode> episodes;
+    private final ArrayList<Episode> episodes;
 
     public Series(String name, String year, String[] genre, double rating, String[] episodes) {
         super(name, year, genre, rating);
+
+        this.episodes = new ArrayList<>();
 
         for (String s : episodes) { // create episodes from constructor array.
             this.addEpisode(new Episode(this, s));
