@@ -1,3 +1,4 @@
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -7,26 +8,46 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class SeriesTest {
 
+    StreamingService s;
+    ArrayList<Media> m;
+    ArrayList<Series> se;
+
     @BeforeEach
     void beforeEach() {
-        StreamingService streamingService = new StreamingService("Test");
+        s = new StreamingService("Test");
 
-        streamingService.loadSeriesData("data/seriesData.csv");
+        s.loadSeriesData("data/seriesData.csv");
 
-        ArrayList<Media> media = streamingService.getMedia();
+        m = s.getMedia();
 
-        ArrayList<Series> series = new ArrayList<>();
+        se = new ArrayList<>();
 
-        for (Media m : media) {
+        for (Media m : m) {
             if (m instanceof Series) {
-                series.add((Series) m);
+                se.add((Series) m);
             }
         }
 
-        System.out.println("[Series Test] Total series: " + series.size());
+        System.out.println("[Series Test] Total series: " + se.size());
     }
 
     @Test
-    void getEpisodes() {
+    void seriesTotalShouldNotBeZero() {
+        assertNotEquals(0, se.size());
     }
+
+    @Test
+    void episodesShouldNotBeZero() {
+        int size = se.getFirst().getEpisodes().size();
+
+        assertNotEquals(0, size);
+    }
+
+    @Test
+    void playEpisodes() {
+        for (Episode e : se.get(2).getEpisodes()) {
+            e.play();
+        }
+    }
+
 }
