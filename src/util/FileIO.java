@@ -6,12 +6,14 @@ import java.util.Scanner;
 
 public final class FileIO {
 
-    public static ArrayList<String> readData(String path) {
+    public static ArrayList<String> readData(String path, boolean skipHeader) {
         ArrayList<String> data = new ArrayList<>();
         File file = new File(path);
 
         try (Scanner scan = new Scanner(file)) {
-            scan.nextLine(); // Skip the header.
+            if (skipHeader) {
+                scan.nextLine(); // Skip the header.
+            }
 
             while(scan.hasNextLine()) {
                 data.add(scan.nextLine());
@@ -22,13 +24,16 @@ public final class FileIO {
         return data;
     }
 
-    public static String[] readData(String path, int size) {
+    public static String[] readData(String path, int size, boolean skipHeader) {
         String[] data = new String[size];
         File file = new File(path);
 
         try (Scanner scan = new Scanner(file)) {
             int counter = 0; // Create counter for Array index.
-            scan.nextLine(); // Skip the header.
+
+            if (skipHeader) {
+                scan.nextLine(); // Skip the header.
+            }
 
             while (scan.hasNextLine()) {
                 data[counter] = scan.nextLine();
