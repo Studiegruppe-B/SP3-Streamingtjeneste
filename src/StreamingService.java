@@ -54,7 +54,7 @@ public class StreamingService {
         }
     }
 
-    private void loadMovieData(String path) {
+    public void loadMovieData(String path) {
         ArrayList<String> movieData = FileIO.readData(path); // Read movie data.
 
         for (String s : movieData) {
@@ -73,7 +73,7 @@ public class StreamingService {
         }
     }
 
-    private void loadSeriesData(String path) {
+    public void loadSeriesData(String path) {
         ArrayList<String> seriesData = FileIO.readData(path);
 
         for (String s : seriesData) {
@@ -83,7 +83,7 @@ public class StreamingService {
             String[] genres = splitData[2].trim().split(", ");
 
             try {
-                double rating = Double.parseDouble(splitData[3].trim());
+                double rating = Double.parseDouble(splitData[3].trim().replace(",", "."));
                 String[] episodes = splitData[4].trim().split(", ");
 
                 // Create series Objects.
@@ -97,5 +97,9 @@ public class StreamingService {
 
     public boolean addMedia(Media media) {
         return this.media.add(media);
+    }
+
+    public ArrayList<Media> getMedia() {
+        return this.media;
     }
 }
