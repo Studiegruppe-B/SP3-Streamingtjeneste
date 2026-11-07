@@ -33,7 +33,7 @@ public class StreamingService {
     public void userLogIn(){
         String username = TextUI.promptText("Enter your username: ");
         String password = TextUI.promptText("Enter your password: ");
-        String correctPassword = FileIO.readData("data/"+username+".csv").get(0);
+        String correctPassword = FileIO.readData("data/"+username+".csv", true).get(0);
         if (password.equals(correctPassword)){
             this.start();
         }
@@ -49,13 +49,13 @@ public class StreamingService {
         ArrayList<String> data = new ArrayList<>();
         data.add(password);
         if(FileIO.createFile("data/"+username+".csv")){
-            FileIO.saveData(("data/"+username+".csv"), "Password:", data);
+            FileIO.saveData(("data/"+username+".csv"), data, "Password:");
             userLogIn();
         }
     }
 
     public void loadMovieData(String path) {
-        ArrayList<String> movieData = FileIO.readData(path); // Read movie data.
+        ArrayList<String> movieData = FileIO.readData(path, false); // Read movie data.
 
         for (String s : movieData) {
             String[] splitData = s.split(";");
@@ -74,7 +74,7 @@ public class StreamingService {
     }
 
     public void loadSeriesData(String path) {
-        ArrayList<String> seriesData = FileIO.readData(path);
+        ArrayList<String> seriesData = FileIO.readData(path, false);
 
         for (String s : seriesData) {
             String[] splitData = s.split(";");
