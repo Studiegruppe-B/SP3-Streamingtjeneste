@@ -45,11 +45,24 @@ public final class FileIO {
         return data;
     }
 
-    public static void saveData(String path, String header, ArrayList<String> data) {
+    public static void saveData(String path, ArrayList<String> data, String header) {
         File file = new File(path); // Create new file object.
 
         try (Writer writer = new FileWriter(file)) {
             writer.write(header); // Write the header.
+
+            for (String s : data) {
+                writer.write(s + "\n");
+            }
+        } catch (IOException e) {
+            System.out.println("[FileIO] File not found!");
+        }
+    }
+
+    public static void saveData(String path, ArrayList<String> data) {
+        File file = new File(path); // Create new file object.
+
+        try (Writer writer = new FileWriter(file)) {
 
             for (String s : data) {
                 writer.write(s + "\n");
