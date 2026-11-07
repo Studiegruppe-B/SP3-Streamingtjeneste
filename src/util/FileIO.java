@@ -47,7 +47,7 @@ public final class FileIO {
             writer.write(header); // Write the header.
 
             for (String s : data) {
-                writer.write(s + "\n");
+                writer.write("\n"+ s);
             }
         } catch (IOException e) {
             System.out.println("[FileIO] File not found!");

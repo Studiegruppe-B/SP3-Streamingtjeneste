@@ -24,14 +24,13 @@ public class StreamingService {
                 createUser();
                 break;
         }
-
     }
 
     public void userLogIn(){
         String username = TextUI.promptText("Enter your username: ");
         String password = TextUI.promptText("Enter your password: ");
-        String correctPassword = FileIO.readData("data/"+username+".csv").get(0);
-        if (password == correctPassword){
+        String correctPassword = FileIO.readData("data/"+username+".csv").getFirst();
+        if (password.equals(correctPassword)){
             startStreamingService();
         }
     }
