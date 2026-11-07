@@ -14,6 +14,6 @@ public class Episode implements Playable {
 
     @Override
     public void play() {
-        System.out.println("Now playing: " + parent.name + " episode: " + this.episode);
+        System.out.println("Now playing: " + parent.name + " (Episode: " + this.episode + ")");
     }
 }
