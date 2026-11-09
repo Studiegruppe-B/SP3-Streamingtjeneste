@@ -7,6 +7,7 @@ import java.util.Arrays;
 public class StreamingService {
     private final String name;
     private final ArrayList<Media> media;
+    private User user;
 
     public StreamingService(String name) {
         this.name = name;
