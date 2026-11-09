@@ -1,10 +1,15 @@
 import util.FileIO;
 import util.TextUI;
 
+import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 
 public class StreamingService {
+    private final String DEFUALT_SAVE_HEADER = "Password; History; Saved";
+    private final int MINIMUM_PASSWORD_LENGTH = 6;
+
     private final String name;
     private final ArrayList<Media> media;
     private User user;
@@ -35,7 +40,6 @@ public class StreamingService {
 
                     break;
                 case 2:
-                    createUser(getUsername(), getPassword());
                     running = false;
                     break;
             }
@@ -61,7 +65,26 @@ public class StreamingService {
         return false;
     }
 
-    public void createUser(String username, String password){
+    public String createUser(String username, String password) {
+        if (password.length() < MINIMUM_PASSWORD_LENGTH) { // Check if password length is greater than 6.
+            throw new IllegalArgumentException("Password length must be greater than 6");
+        }
+        // Pre-define save path.
+        String userPath = "data/" + username + ".csv";
+
+        // Create new user save file.
+        try {
+            FileIO.createFile(userPath);
+
+            // Write password to file.
+            FileIO.saveData(userPath,Arrays.asList(password), DEFUALT_SAVE_HEADER);
+        } catch (IOException e) {
+            System.out.println("Could not create new user!");
+        }
+        return null;
+    }
+
+/*    public void createUser(String username, String password){
         while (password.length() <= 6){
             System.out.println("Password is too short, try again");
             password = TextUI.promptText("Enter your password: ");
@@ -71,7 +94,7 @@ public class StreamingService {
         if(FileIO.createFile("data/"+username+".csv")){
             FileIO.saveData(("data/"+username+".csv"), data, "Password:");
         }
-    }
+    }*/
 
     public void loadMovieData(String path) {
         ArrayList<String> movieData = FileIO.readData(path, false); // Read movie data.
