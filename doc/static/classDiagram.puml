@@ -52,6 +52,22 @@ class Series {
 + ArrayList<Episode> getEpisodes()
 }
 
+class DisplayMenu{
+- Menu current
+- final Deque<Menu> history
+- final Set<Menu> listScreens
++ void showMenu()
+- void choiceHandler(String)
+- void loginMenu(String)
+- void homeMenu(String)
+- void filterMenu(String)
+- void genreMenu(String)
+- void openMedia(String, Menu, Menu)
+- void seriesMenu(String)
+- void playMenu(String)
+- void goTo(Menu)
+}
+
 
 class User{
 - String name
@@ -105,8 +121,11 @@ StreamingService *-- Media
 StreamingService *-- FileIO
 StreamingService *-- TexUI
 StreamingService *-- User
+StreamingService *-- DisplayMenu
 Media <|-- Movie
 Media <|-- Series
 Series *-- Episode
 StreamingService --> PasswordEncryption
+DisplayMenu --> Menu
+DisplayMenu --> TextUI
 @enduml
