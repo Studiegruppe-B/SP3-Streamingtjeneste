@@ -65,7 +65,7 @@ public class StreamingService {
         return false;
     }
 
-    public String createUser(String username, String password) {
+    public void createUser(String username, String password) {
         if (password.length() < MINIMUM_PASSWORD_LENGTH) { // Check if password length is greater than 6.
             throw new IllegalArgumentException("Password length must be greater than 6");
         }
@@ -81,7 +81,6 @@ public class StreamingService {
         } catch (IOException e) {
             System.out.println("Could not create new user!");
         }
-        return null;
     }
 
 /*    public void createUser(String username, String password){
