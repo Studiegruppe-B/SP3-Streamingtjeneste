@@ -20,29 +20,48 @@ public class StreamingService {
     }
 
     public void registerUser(){
-        switch (TextUI.promptNumeric("Log in(1) or create user(2)?")){
-            case 1:
-                userLogIn();
-                break;
-            case 2:
-                createUser();
-                break;
+        boolean running = true;
+        while (running) {
+            switch (TextUI.promptNumeric("Log in(1) or create user(2)?")) {
+                case 1:
+                    if (userLogIn(getUsername(), getPassword())) {
+                        start();
+                        running = false;
+                    } else {
+                        System.out.println("Wrong username or password");
+
+
+                    }
+
+                    break;
+                case 2:
+                    createUser(getUsername(), getPassword());
+                    running = false;
+                    break;
+            }
         }
 
     }
 
-    public void userLogIn(){
+    private String getUsername(){
         String username = TextUI.promptText("Enter your username: ");
+        return username;
+    }
+
+    public String getPassword(){
         String password = TextUI.promptText("Enter your password: ");
-        String correctPassword = FileIO.readData("data/"+username+".csv", true).get(0);
+        return password;
+    }
+
+    public boolean userLogIn(String username, String password){
+        String correctPassword = FileIO.readData("data/"+username+".csv", true).getFirst();
         if (password.equals(correctPassword)){
-            this.start();
+            return true;
         }
+        return false;
     }
 
-    public void createUser(){
-        String username = TextUI.promptText("Enter your username: ");
-        String password = TextUI.promptText("Enter your password: ");
+    public void createUser(String username, String password){
         while (password.length() <= 6){
             System.out.println("Password is too short, try again");
             password = TextUI.promptText("Enter your password: ");
@@ -51,7 +70,6 @@ public class StreamingService {
         data.add(password);
         if(FileIO.createFile("data/"+username+".csv")){
             FileIO.saveData(("data/"+username+".csv"), data, "Password:");
-            userLogIn();
         }
     }
 
