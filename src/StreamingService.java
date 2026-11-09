@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class StreamingService {
-    private final String DEFUALT_SAVE_HEADER = "Password; History; Saved";
+    private final String DEFAULT_SAVE_HEADER = "Password; History; Saved";
     private final int MINIMUM_PASSWORD_LENGTH = 6;
 
     private final String name;
@@ -65,7 +65,7 @@ public class StreamingService {
         return false;
     }
 
-    public String createUser(String username, String password) {
+    public void createUser(String username, String password) {
         if (password.length() < MINIMUM_PASSWORD_LENGTH) { // Check if password length is greater than 6.
             throw new IllegalArgumentException("Password length must be greater than 6");
         }
@@ -77,11 +77,10 @@ public class StreamingService {
             FileIO.createFile(userPath);
 
             // Write password to file.
-            FileIO.saveData(userPath,Arrays.asList(password), DEFUALT_SAVE_HEADER);
+            FileIO.saveData(userPath, Arrays.asList(password), DEFAULT_SAVE_HEADER);
         } catch (IOException e) {
             System.out.println("Could not create new user!");
         }
-        return null;
     }
 
 /*    public void createUser(String username, String password){
