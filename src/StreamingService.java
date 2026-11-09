@@ -64,7 +64,7 @@ public class StreamingService {
             String year = splitData[1].trim();
             String[] genre = splitData[2].trim().split(", ");
             try {
-                double rating = Double.parseDouble(splitData[3].trim());
+                double rating = Double.parseDouble(splitData[3].trim().replace(",", "."));
                 // Create Movie Objects.
                 this.addMedia(new Movie(name, year, genre, rating));
             } catch (NumberFormatException e) {
