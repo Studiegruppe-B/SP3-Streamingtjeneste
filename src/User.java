@@ -19,6 +19,28 @@ public class User {
         this.watchedMedia = watchedMedia;
         this.savedMedia = savedMedia;
     }
+    // tilføjer media til watchedmedia
+    public void addWatchedMedia(Media media) {
+        if (media != null) {
+            watchedMedia.add(media);
+        }
+    }
+
+    // tilføjer media til watched media
+    public void addSavedMedia(Media media) {
+        if (media != null) {
+            savedMedia.add(media);
+        }
+    }
+    // getter
+    public ArrayList<Media> getWatchedMedia() {
+        return watchedMedia;
+    }
+
+    //getter
+    public ArrayList<Media> getSavedMedia() {
+        return savedMedia;
+    }
 
 
 }
