@@ -42,5 +42,18 @@ public class User {
         return savedMedia;
     }
 
+    // viser listerne
+    public void printSavedMedia(){
+        for (Media m : savedMedia){
+            System.out.println(m.name);
+        }
+    }
+
+    public void printWatchedMedia(){
+        for ( Media m: watchedMedia){
+            System.out.println(m.name);
+        }
+    }
+
 
 }
