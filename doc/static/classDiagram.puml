@@ -143,6 +143,6 @@ Media <|-- Movie
 Media <|-- Series
 Series *-- Episode
 StreamingService *-- PasswordEncryption
-DisplayMenu --* Menu
+DisplayMenu --> Menu
 DisplayMenu --* TextUI
 @enduml
