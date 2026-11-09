@@ -16,4 +16,10 @@ class StreamingServiceTest {
     void registerUser() {
         s.createUser("TestUser", "TestPassword");
     }
+
+    @Test
+    void checkCredentials() {
+        assertTrue(s.checkCredentials("TestUser", "TestPassword"));
+
+    }
 }

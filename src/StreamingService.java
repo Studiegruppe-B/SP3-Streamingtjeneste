@@ -1,4 +1,5 @@
 import util.FileIO;
+import util.PasswordEncryption;
 import util.TextUI;
 
 import java.io.IOException;
@@ -24,10 +25,12 @@ public class StreamingService {
         loadSeriesData("data/seriesData.csv");
     }
 
-    public boolean userLogIn(String username, String password){
-        String correctPassword = FileIO.readData("data/"+username+".csv", true).getFirst();
-        if (password.equals(correctPassword)){
-            return true;
+    public boolean checkCredentials(String username, String password){
+        try {
+            String correctPassword = FileIO.readData("data/" + username + ".csv", true).getFirst();
+            return PasswordEncryption.checkPassword(password.toCharArray(), correctPassword);
+        } catch (Exception e) {
+            System.out.println("Could not check credentials!");
         }
         return false;
     }
@@ -44,7 +47,11 @@ public class StreamingService {
             FileIO.createFile(userPath);
 
             // Write password to file.
-            FileIO.saveData(userPath, Arrays.asList(password), DEFAULT_SAVE_HEADER);
+            try {
+                FileIO.saveData(userPath, Arrays.asList(PasswordEncryption.createStoredKey(password.toCharArray())), DEFAULT_SAVE_HEADER);
+            } catch (Exception e) {
+                System.out.println("Could not encrypt password!");
+            }
         } catch (IOException e) {
             System.out.println("Could not create new user!");
         }
