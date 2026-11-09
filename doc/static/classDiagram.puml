@@ -29,16 +29,29 @@ abstract class Media{
 + abstract void play()
 
 }
+interface Playable {
+void play();
+}
 
-class Movie{
+class Episode implements Playable {
+- final String episode
+- final Series parent
++ Episode(Series, String)
++ String getEpisode()
++ void play()
+}
+
+class Movie implements Playable{
 + Movie(String, int, ArrayList<String>, double)
 }
 
-class Series{
-+ Series(String, int, ArrayList<String>, double, int, int )
-- int seasons
-- int episodes
+class Series {
+- ArrayList<Episode> episodes
++ Series(String, ArrayList<String>, int, double, ArrayList<String>)
+- boolean addEpisode(Episode)
++ ArrayList<Episode> getEpisodes()
 }
+
 
 class User{
 - String name
@@ -57,21 +70,22 @@ class User{
 
 package "util"{
 class FileIO{
-+ static ArrayList<String> readData(String)
-+ static String[] readData(String, int)
-+ static void saveData(String, String, ArrayList<String>)
++ {static} ArrayList<String> readData(String)
++ {static} String[] readData(String, int)
++ {static} void saveData(String, String, ArrayList<String>)
 }
 
 class TexUI{
-+ static void userMessage(String)
-+ static String promptText(String)
-+ static boolean promptBinary(String)
-+ static int promptNumeric(String)
-+ static ArrayList<String> promptChoice(ArrayList<String>, int, String)
-+ static void displayList(ArrayList<String>, String, boolean)
-+ static int promptMenuChoice(ArrayList<String>, String)
++ {static} void userMessage(String)
++ {static} String promptText(String)
++ {static} boolean promptBinary(String)
++ {static} int promptNumeric(String)
++ {static} ArrayList<String> promptChoice(ArrayList<String>, int, String)
++ {static} void displayList(ArrayList<String>, String, boolean)
++ {static} int promptMenuChoice(ArrayList<String>, String)
 
 }
+
 }
 
 Main *-- StreamingService
@@ -81,4 +95,5 @@ StreamingService *-- TexUI
 StreamingService *-- User
 Media <|-- Movie
 Media <|-- Series
+Series *-- Episode
 @enduml
