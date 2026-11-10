@@ -6,9 +6,11 @@ public class User {
     ArrayList<Media> watchedMedia;
     ArrayList<Media> savedMedia;
 
-    public User(String name, ArrayList<Media> watchedMedia) {
+    public User(String name, String password) {
         this.name = name;
-        this.watchedMedia = watchedMedia;
+        this.password = password;
+        this.watchedMedia = new ArrayList<>();
+        this.savedMedia = new ArrayList<>();
     }
 
 
@@ -36,19 +38,34 @@ public class User {
     }
 
     // sletter users watchedHistory Array
-    public void clearHistory(){
-        for (Media media : watchedMedia){
-            watchedMedia.remove(media);
-        }
+    public void clearHistory() {
+        watchedMedia.clear();
         System.out.println("Watch history cleared");
     }
 
     //fjerner en media fra watchedHistory Array
     public void deleteFromHistory(Media media){
-        if (watchedMedia.remove(media)){
-            System.out.println("Media was removed from watch history");
-        } else {
-            System.out.println("Media was not found in watch history");
+        try {
+            if (watchedMedia.remove(media)) {
+                System.out.println("Media was removed from watch history");
+            } else {
+                System.out.println("Media was not found in watch history");
+            }
+        } catch (NullPointerException e) {
+            System.out.println("Watch history is already empty");
+        }
+    }
+
+    //Fjerner en media fra savedMedia
+    public void deleteFromSaved(Media media){
+        try {
+            if (savedMedia.remove(media)) {
+                System.out.println("Media was removed from saved");
+            } else {
+                System.out.println("Media was not found in saved");
+            }
+        } catch (NullPointerException e) {
+            System.out.println("Saved media is empty");
         }
     }
 
