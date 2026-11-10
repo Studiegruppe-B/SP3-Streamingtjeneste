@@ -6,13 +6,13 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 
 public class PageBuilder {
-    private static final Deque<PageTemplate> history = new ArrayDeque<>();
-    private static PageTemplate current;
+    private final Deque<PageTemplate> history = new ArrayDeque<>();
+    private PageTemplate current;
 
-    private static boolean running = true;
+    private boolean running = true;
 
     //logik metoder
-    public  void goTo(PageTemplate next) {
+    public void goTo(PageTemplate next) {
         history.push(current);
         current = next;
     }
@@ -20,7 +20,7 @@ public class PageBuilder {
         return current = history.pop();
     }
 
-    public  void exit() {
+    public void exit() {
         running = false;
     }
     public boolean isRunning() {
