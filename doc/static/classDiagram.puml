@@ -101,7 +101,7 @@ class User{
 - ArrayList<Media> savedMedia
 + User(String, String)
 + void addHistory(Media)
-+ void addWatchLater(Media)
++ void addSaved(Media)
 
 + void clearHistory()
 + void deleteFromHistory(Media)
