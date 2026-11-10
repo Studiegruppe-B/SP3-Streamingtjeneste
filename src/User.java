@@ -2,6 +2,7 @@ import java.util.ArrayList;
 
 public class User {
     private String name;
+    private String password;
     ArrayList<Media> watchedMedia;
     ArrayList<Media> savedMedia;
 
@@ -39,6 +40,7 @@ public class User {
         for (Media media : watchedMedia){
             watchedMedia.remove(media);
         }
+        System.out.println("Watch history cleared");
     }
 
     //fjerner en media fra watchedHistory Array
