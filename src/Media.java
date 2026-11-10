@@ -18,4 +18,8 @@ public abstract class Media {
     public String getId() {
         return this.id;
     }
+
+    public String getName() {
+        return name;
+    }
 }

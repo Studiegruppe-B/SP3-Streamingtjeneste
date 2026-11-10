@@ -12,6 +12,7 @@ import java.util.List;
 public class StreamingService {
     private final String DEFAULT_SAVE_HEADER = "Password; History; Saved";
     private final int MINIMUM_PASSWORD_LENGTH = 6;
+    private final int MINIMUM_SEARCH_LENGTH = 1;
 
     private final String name;
     private final ArrayList<Media> media;
@@ -93,6 +94,22 @@ public class StreamingService {
             }
         }
         return new User(username, passwordHash, watched, saved);
+    }
+
+    public ArrayList<Media> getMediaByName(String search) {
+        if (search == null || search.trim().length() < MINIMUM_SEARCH_LENGTH) {
+            throw new IllegalArgumentException("Search must be at least " + MINIMUM_SEARCH_LENGTH + " characters");
+        }
+
+        String query = search.trim().toLowerCase();
+        ArrayList<Media> results = new ArrayList<>();
+
+        for (Media m : media) {
+            if (m.getName().toLowerCase().contains(query)) {
+                results.add(m);
+            }
+        }
+        return results;
     }
 
 
