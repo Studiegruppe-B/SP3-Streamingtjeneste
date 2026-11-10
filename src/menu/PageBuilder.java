@@ -30,7 +30,7 @@ public class PageBuilder {
         return current;
     }
 
-    public void setCurrent(PageTemplate current) {
+    public void select(PageTemplate current) {
         this.current = current;
     }
 
