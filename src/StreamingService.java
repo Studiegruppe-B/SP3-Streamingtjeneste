@@ -1,3 +1,5 @@
+import menu.PageBuilder;
+import menu.PageTemplate;
 import util.FileIO;
 import util.TextUI;
 
@@ -7,15 +9,43 @@ import java.util.Arrays;
 public class StreamingService {
     private final String name;
     private final ArrayList<Media> media;
+    private final PageBuilder pageBuilder = new PageBuilder();
+
+    //Instances of pages:
+    PageTemplate startPage = new PageTemplate();
+    PageTemplate homePage = new PageTemplate();
+    PageTemplate filterPage = new PageTemplate();
+    PageTemplate searchedPage = new PageTemplate();
+    PageTemplate genrePage = new PageTemplate();
+    PageTemplate watchedPage = new PageTemplate();
+    PageTemplate savedPage = new PageTemplate();
+    PageTemplate seasonPage = new PageTemplate();
+    PageTemplate removableSeasonPage = new PageTemplate();
+    PageTemplate PlayPage = new PageTemplate();
+    PageTemplate removablePlayPage = new PageTemplate();
 
     public StreamingService(String name) {
         this.name = name;
         this.media = new ArrayList<>();
     }
 
+    public void buildMenu() {
+        startPage.addSingleOptions(new String[]{"Exit", "Log in","Sign in"},
+                pageBuilder::exit,
+                ()-> System.out.println("Test1"),
+                ()-> System.out.println("Test2")//Exit knap
+                // ()->logIn(),    //LoginKnap: skal bruge goTo(homePage); hvis login godkendt
+                //  ()->signIn(),   //SigninKnap: skal bruge goTo(homePage);
+        );
+
+    }
+
     public void start() {
         loadMovieData("data/filmData.csv");
         loadSeriesData("data/seriesData.csv");
+        buildMenu();
+        pageBuilder.setCurrent(startPage);
+        pageBuilder.display();
     }
 
     public void registerUser(){

@@ -1,23 +1,26 @@
 package menu;
 
+import util.TextUI;
+
 import java.util.ArrayDeque;
 import java.util.Deque;
 
 public class PageBuilder {
-    private final Deque<PageTemplate> history = new ArrayDeque<>();
-    private PageTemplate current;
+    private static final Deque<PageTemplate> history = new ArrayDeque<>();
+    private static PageTemplate current;
 
-    private boolean running = true;
+    private static boolean running = true;
 
     //logik metoder
-    public void goTo(PageTemplate next) {
+    public  void goTo(PageTemplate next) {
         history.push(current);
         current = next;
     }
-    public PageTemplate back(){
+    public  PageTemplate back(){
         return current = history.pop();
     }
-    public void exit() {
+
+    public  void exit() {
         running = false;
     }
     public boolean isRunning() {
@@ -27,70 +30,92 @@ public class PageBuilder {
         return current;
     }
 
+    public void setCurrent(PageTemplate current) {
+        this.current = current;
+    }
 
-    //Instances of pages:
-    static PageTemplate startPage = new PageTemplate();
-    static PageTemplate homePage = new PageTemplate();
-    static PageTemplate searchPage = new PageTemplate();
-    static PageTemplate filterPage = new PageTemplate();
-    static PageTemplate genrePage = new PageTemplate();
-    static PageTemplate watchedPage = new PageTemplate();
-    static PageTemplate savedPage = new PageTemplate();
-    static PageTemplate mediaPage = new PageTemplate();
-    PageTemplate inWatchedPage = new PageTemplate();
-    PageTemplate inGenrePage = new PageTemplate();
-    PageTemplate inSavedPage = new PageTemplate();
-    static PageTemplate seasonPage = new PageTemplate();
-    static PageTemplate savedSeasonPage = new PageTemplate();
-    static PageTemplate normalPlayablePage = new PageTemplate();
-    static PageTemplate SavedPlayablePage = new PageTemplate();
+    public void display() {
+        if (this.getCurrent() == null) {
+            throw new NullPointerException("[PageBuilder] Current page has not been set!");
+        }
+        while (this.isRunning()) {
+            PageTemplate current = this.getCurrent();
+            int choice = TextUI.promptMenuChoice(current.getOptions(), "Choose:");
+
+            if (choice >= 1 && choice <= current.getOptions().size()) {
+                current.choice(choice - 1);
+            } else {
+                TextUI.userMessage("Invalid choice");
+            }
+        }
+    }
+
+
 
 
     //konfigurer for  bruger valg
-    public static void buildPages(){
+   /* public static void buildPages(){
 
         //konfigurer for final bruger valg
         startPage.addSingleOptions(new String[]{"Exit", "Log in","Sign in"},
-                ()->{return;},      //Exit knap
-                ()->{/*login() AND goTo()*/},    //LoginKnap
-                ()->{/*signin()*/}
+                ()->exit()      //Exit knap
+               // ()->logIn(),    //LoginKnap: skal bruge goTo(homePage); hvis login godkendt
+              //  ()->signIn(),   //SigninKnap: skal bruge goTo(homePage);
         );
         homePage.addSingleOptions(new String[]{"Exit", "Search", "Filter"},
-                ()->{return;},
-                ()->{/*search() AND goTo()*/ },
-                ()->{/* goTO()*/}
-        );
-        searchPage.addSingleOptions(new String[]{"Back"},
-                ()->{/*back()*/}
+                ()->exit(),
+              //  ()->search(),  //Søg efter film: skal bruge goTo(searchedPage);
+                ()-> goTo(filterPage)
         );
         filterPage.addSingleOptions(new String[]{"Back", "Genre", "Watched", "Saved"},
-                ()->{/*back()*/}
-                );
-        genrePage.addSingleOptions(new String[]{"Back"},
-                ()->{/*back()*/}
+                ()->back(),
+                ()->goTo(genrePage),
+                ()->goTo(watchedPage),
+                ()->goTo(savedPage)
         );
-        watchedPage.addSingleOptions(new String[]{"Back"},
-                ()->{/*back()*/}
+        searchedPage.addSingleOptions(new String[]{"Back"},   //Liste af search resultater
+                ()->back()
         );
-        savedPage.addSingleOptions(new String[]{"Back"},
-                ()->{/*back()*/}
+        genrePage.addSingleOptions(new String[]{"Back"},  //Liste af alle genre
+                ()->back()
         );
-        mediaPage.addSingleOptions(new String[]{"Back"},
-                ()->{/*back()*/}
+        watchedPage.addSingleOptions(new String[]{"Back","Clear History"},   //Liste af watched media
+                ()->back(),
+                ()->watchedPage.clearOptions(2,watchedPage.getOptions().size())
+
+        );
+        savedPage.addSingleOptions(new String[]{"Back"},   //Liste af saved media
+                ()->back()
         );
 
-        seasonPage.addSingleOptions(new String[]{"Back", "Save"},
-                ()->{/*back()*/}
+        seasonPage.addSingleOptions(new String[]{"Back", "Save"},          //Liste list af episoder
+                ()->back()
+               // ()->save()
+
         );
-        savedSeasonPage.addSingleOptions(new String[]{"Back","Save","Remove"},
-                ()->{/*back()*/}
+        removableSeasonPage.addSingleOptions(new String[]{"Back","Save","Remove"},  //Liste af episoder
+                ()->back()
+              //  ()->save(),
+              //  ()-> remove()
         );
-        normalPlayablePage.addSingleOptions(new String[]{"Back","Play","Save"},
-                ()->{/*back()*/}
+        PlayPage.addSingleOptions(new String[]{"Back","Play","Save"},
+                ()->back()
+               // ()->play(),
+               // ()->save()
+
         );
-        SavedPlayablePage.addSingleOptions(new String[]{"Back","Play","Save","Remove"},
-                ()->{/*back()*/}
+        removablePlayPage.addSingleOptions(new String[]{"Back","Play","Save","Remove"},
+                ()->back()
+              ()->play(),
+                ()->save(),
+                ()->remove()
         );
+*/
+        //Konfigurer ArrayList options.
+
+
+
+
 
 
 
@@ -101,4 +126,4 @@ public class PageBuilder {
 
 
 
-}
+

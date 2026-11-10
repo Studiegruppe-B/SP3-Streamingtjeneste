@@ -1,11 +1,12 @@
 package menu;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.List;
 import java.util.function.Consumer;
 
 public class PageTemplate {
-
 
     private final ArrayList<Runnable> action;
     private final ArrayList<String> options;
@@ -14,6 +15,8 @@ public class PageTemplate {
         this.options = new ArrayList<>();
         this.action = new ArrayList<>();
     }
+
+
 
     // Skriv manuelt options, hvor hver option får sin egen lambda.
     public void addSingleOptions(String[] texts, Runnable... newActions) {
@@ -37,16 +40,18 @@ public class PageTemplate {
         action.get(index).run();
     }
 
+
     public ArrayList<String> getOptions() {
         return options;
     }
 
-
     // Rydder siden, så den kan bygges forfra under runtime
-    public void clearOptions() {
+    public void clearOptions(int indexFrom, int indexTo) {
         options.clear();
         action.clear();
     }
+
+
 
 
 
