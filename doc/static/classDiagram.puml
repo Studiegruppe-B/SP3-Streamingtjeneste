@@ -111,7 +111,7 @@ class PasswordEncryption{
 + {static} boolean checkPassword(char[], String)
 }
 
-
+enum Menu
 
 
 }

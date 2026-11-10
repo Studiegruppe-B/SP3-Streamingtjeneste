@@ -48,7 +48,7 @@ public class PageTemplate {
         action.clear();
     }
 
-    
+
 
 }
 
