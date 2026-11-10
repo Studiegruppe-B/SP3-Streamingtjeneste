@@ -1,6 +1,8 @@
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class StreamingServiceTest {
@@ -9,6 +11,32 @@ class StreamingServiceTest {
     @BeforeEach
     void beforeEach() {
         s = new StreamingService("Test Service");
+    }
+    @Test
+    void getMediaByCategory() {
+        s.loadMovieData("data/filmData.csv");
+        s.loadSeriesData("data/seriesData.csv");
+
+        ArrayList<Media> results = s.getMediaByCategory("Crime");
+        assertFalse(results.isEmpty());
+    }
+    @Test
+    void getAllCategories() {
+        s.loadMovieData("data/filmData.csv");
+        s.loadSeriesData("data/seriesData.csv");
+
+        ArrayList<String> categories = s.getAllCategories();
+        System.out.println(categories);
+    }
+    @Test
+    void getMediaByName() {
+        s.loadMovieData("data/filmData.csv");
+        s.loadSeriesData("data/seriesData.csv");
+
+        ArrayList<Media> results = s.getMediaByName("god");
+        for (Media m : results) {
+            System.out.println(m.getName());
+        }
     }
 
 
