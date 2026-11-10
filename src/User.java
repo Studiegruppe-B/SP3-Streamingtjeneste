@@ -5,55 +5,52 @@ public class User {
     ArrayList<Media> watchedMedia;
     ArrayList<Media> savedMedia;
 
-    public User(String name) {
-        this.name = name;
-    }
-
     public User(String name, ArrayList<Media> watchedMedia) {
         this.name = name;
         this.watchedMedia = watchedMedia;
     }
 
-    public User(String name, ArrayList<Media> watchedMedia, ArrayList<Media> savedMedia) {
-        this.name = name;
-        this.watchedMedia = watchedMedia;
-        this.savedMedia = savedMedia;
-    }
+
     // tilføjer media til watchedmedia
-    public void addWatchedMedia(Media media) {
+    public void addHistory(Media media) {
         if (media != null) {
             watchedMedia.add(media);
         }
     }
 
     // tilføjer media til watched media
-    public void addSavedMedia(Media media) {
+    public void addSaved(Media media) {
         if (media != null) {
             savedMedia.add(media);
         }
     }
     // getter
-    public ArrayList<Media> getWatchedMedia() {
+    public ArrayList<Media> getWatched() {
         return watchedMedia;
     }
 
     //getter
-    public ArrayList<Media> getSavedMedia() {
+    public ArrayList<Media> getSaved() {
         return savedMedia;
     }
 
-    // viser listerne
-    public void printSavedMedia(){
-        for (Media m : savedMedia){
-            System.out.println(m.name);
+    // sletter users watchedHistory Array
+    public void clearHistory(){
+        for (Media media : watchedMedia){
+            watchedMedia.remove(media);
         }
     }
 
-    public void printWatchedMedia(){
-        for ( Media m: watchedMedia){
-            System.out.println(m.name);
+    //fjerner en media fra watchedHistory Array
+    public void deleteFromHistory(Media media){
+        if (watchedMedia.remove(media)){
+            System.out.println("Media was removed from watch history");
+        } else {
+            System.out.println("Media was not found in watch history");
         }
     }
+
+
 
 
 }
