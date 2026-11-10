@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 
 public class StreamingService {
     private final String DEFAULT_SAVE_HEADER = "Password; History; Saved";
@@ -13,10 +14,12 @@ public class StreamingService {
 
     private final String name;
     private final ArrayList<Media> media;
+    private final HashMap<String, Media> mediaById;
     private User user;
 
     public StreamingService(String name) {
         this.name = name;
+        this.mediaById = new HashMap<>();
         this.media = new ArrayList<>();
     }
 
@@ -61,8 +64,8 @@ public class StreamingService {
     public void loadMovieData(String path) {
         ArrayList<String> movieData = FileIO.readData(path, false); // Read movie data.
 
-        for (String s : movieData) {
-            String[] splitData = s.split(";");
+        for (int i = 0; i < movieData.size(); i++) {
+            String[] splitData = movieData.get(i).split(";");
 
             String name = splitData[0].trim();
             String year = splitData[1].trim();
@@ -70,7 +73,7 @@ public class StreamingService {
             try {
                 double rating = Double.parseDouble(splitData[3].trim().replace(",", "."));
                 // Create Movie Objects.
-                this.addMedia(new Movie(name, year, genre, rating));
+                this.addMedia(new Movie("M" + i, name, year, genre, rating));
             } catch (NumberFormatException e) {
                 System.out.println("[" + this.name + "] Could not parse movie data from file. Incorrect format!");
             }
@@ -80,8 +83,8 @@ public class StreamingService {
     public void loadSeriesData(String path) {
         ArrayList<String> seriesData = FileIO.readData(path, false);
 
-        for (String s : seriesData) {
-            String[] splitData = s.split(";");
+        for (int i = 0; i < seriesData.size(); i++) {
+            String[] splitData = seriesData.get(i).split(";");
             String name = splitData[0].trim();
             String year = splitData[1].trim();
             String[] genres = splitData[2].trim().split(", ");
@@ -91,7 +94,7 @@ public class StreamingService {
                 String[] episodes = splitData[4].trim().split(", ");
 
                 // Create series Objects.
-                this.addMedia(new Series(name, year, genres, rating, episodes));
+                this.addMedia(new Series("S" + i, name, year, genres, rating, episodes));
             } catch (NumberFormatException e) {
                 System.out.println("[" + this.name + "] Could not parse movie data from file. Incorrect format!");
             }
