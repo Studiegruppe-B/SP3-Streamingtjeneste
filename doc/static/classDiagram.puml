@@ -7,13 +7,21 @@ class Main{
 class StreamingService{
 - String name
 - User user
-- ArrayList<Movie> movies
-- ArrayList<Series> series
-+ startStreamingService()
-- displayMenu()
+- ArrayList<Media>
++ void start()
 - ArrayList<Media> getMediaByName()
 - ArrayList<Media> getMediaByCategory()
-- void registerUser()
+
+- void createUser(String, String)
+- void checkCredentials(String, String)
+- void loadUser(String)
+- void saveUser(User)
+
+- void loadMovieData(String)
+- void loadSeriesData(String)
+
+- void addMedia(Media)
+- ArrayList<Media> getMedia()
 }
 
 
@@ -91,14 +99,15 @@ class User{
 - String password
 - ArrayList<Media> watchedMedia
 - ArrayList<Media> savedMedia
-+ User(String, String, Arraylist<Media>, Arraylist<Media>)
 + User(String, String)
-+ void addToHistory(Media)
-+ void addToWatchLater(Media)
-+ void deleteHistory()
++ void addHistory(Media)
++ void addWatchLater(Media)
+
++ void clearHistory()
 + void deleteFromHistory(Media)
-+ Arraylist<Media> getWatchedList()
-+ Arraylist<Media> getSavedMedia()
+
++ Arraylist<Media> getWatched()
++ Arraylist<Media> getSaved()
 }
 
 package "util"{
@@ -144,5 +153,4 @@ Media <|-- Series
 Series *-- Episode
 StreamingService *-- PasswordEncryption
 DisplayMenu --> Menu
-DisplayMenu --* TextUI
 @enduml
