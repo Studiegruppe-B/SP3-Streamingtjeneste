@@ -2,6 +2,7 @@ package util;
 
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 class FileIOTest {
@@ -22,6 +23,10 @@ class FileIOTest {
 
     @Test
     void createFile() {
-        FileIO.createFile("data/player1.csv");
+        try {
+            FileIO.createFile("data/player1.csv");
+        } catch (IOException e) {
+            System.out.println(e);
+        }
     }
 }

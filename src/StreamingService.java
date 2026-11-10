@@ -1,10 +1,16 @@
 import util.FileIO;
+import util.PasswordEncryption;
 import util.TextUI;
 
+import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 
 public class StreamingService {
+    private final String DEFAULT_SAVE_HEADER = "Password; History; Saved";
+    private final int MINIMUM_PASSWORD_LENGTH = 6;
+
     private final String name;
     private final ArrayList<Media> media;
     private User user;
@@ -19,41 +25,38 @@ public class StreamingService {
         loadSeriesData("data/seriesData.csv");
     }
 
-    public void registerUser(){
-        switch (TextUI.promptNumeric("Log in(1) or create user(2)?")){
-            case 1:
-                userLogIn();
-                break;
-            case 2:
-                createUser();
-                break;
+    public boolean checkCredentials(String username, String password){
+        try {
+            String correctPassword = FileIO.readData("data/" + username + ".csv", true).getFirst();
+            return PasswordEncryption.checkPassword(password.toCharArray(), correctPassword);
+        } catch (Exception e) {
+            System.out.println("Could not check credentials!");
         }
-
+        return false;
     }
 
-    public void userLogIn(){
-        String username = TextUI.promptText("Enter your username: ");
-        String password = TextUI.promptText("Enter your password: ");
-        String correctPassword = FileIO.readData("data/"+username+".csv", true).get(0);
-        if (password.equals(correctPassword)){
-            this.start();
+    public void createUser(String username, String password) {
+        if (password.length() < MINIMUM_PASSWORD_LENGTH) { // Check if password length is greater than 6.
+            throw new IllegalArgumentException("Password length must be greater than 6");
+        }
+        // Pre-define save path.
+        String userPath = "data/" + username + ".csv";
+
+        // Create new user save file.
+        try {
+            FileIO.createFile(userPath);
+
+            // Write password to file.
+            try {
+                FileIO.saveData(userPath, Arrays.asList(PasswordEncryption.createStoredKey(password.toCharArray())), DEFAULT_SAVE_HEADER);
+            } catch (Exception e) {
+                System.out.println("Could not encrypt password!");
+            }
+        } catch (IOException e) {
+            System.out.println("Could not create new user!");
         }
     }
 
-    public void createUser(){
-        String username = TextUI.promptText("Enter your username: ");
-        String password = TextUI.promptText("Enter your password: ");
-        while (password.length() <= 6){
-            System.out.println("Password is too short, try again");
-            password = TextUI.promptText("Enter your password: ");
-        }
-        ArrayList<String> data = new ArrayList<>();
-        data.add(password);
-        if(FileIO.createFile("data/"+username+".csv")){
-            FileIO.saveData(("data/"+username+".csv"), data, "Password:");
-            userLogIn();
-        }
-    }
 
     public void loadMovieData(String path) {
         ArrayList<String> movieData = FileIO.readData(path, false); // Read movie data.
