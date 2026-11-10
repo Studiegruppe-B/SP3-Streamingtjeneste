@@ -97,7 +97,7 @@ public class StreamingService {
     }
 
     public ArrayList<Media> getMediaByName(String search) {
-        if (search == null || search.trim().length() < MINIMUM_SEARCH_LENGTH) {
+        if (search.trim().length() < MINIMUM_SEARCH_LENGTH) {
             throw new IllegalArgumentException("Search must be at least " + MINIMUM_SEARCH_LENGTH + " characters");
         }
 
@@ -107,6 +107,33 @@ public class StreamingService {
         for (Media m : media) {
             if (m.getName().toLowerCase().contains(query)) {
                 results.add(m);
+            }
+        }
+        return results;
+    }
+    public ArrayList<String> getAllCategories() {
+        ArrayList<String> categories = new ArrayList<>();
+
+        for (Media m : media) {
+            for (String g : m.getGenre()) {
+                String category = g.trim();
+                if (!categories.contains(category)) {
+                    categories.add(category);
+                }
+            }
+        }
+        return categories;
+    }
+
+
+    public ArrayList<Media> getMediaByCategory(String category) {
+        ArrayList<Media> results = new ArrayList<>();
+        for (Media m : media) {
+            for (String g : m.getGenre()) {
+                if (g.trim().equalsIgnoreCase(category)) {
+                    results.add(m);
+                    break;
+                }
             }
         }
         return results;

@@ -20,6 +20,9 @@ public abstract class Media {
     }
 
     public String getName() {
-        return name;
+        return this.name;
+    }
+    public String[] getGenre() {
+        return this.genre;
     }
 }
