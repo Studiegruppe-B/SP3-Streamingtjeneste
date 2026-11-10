@@ -35,7 +35,7 @@ class StreamingServiceTest {
     void loadUser() {
         s.loadMovieData("data/filmData.csv");
         s.loadSeriesData("data/seriesData.csv");
-        s.setUser(s.loadUser("TestUser2"));
+        s.setUser(s.loadUser("TestUser"));
         System.out.println(s.getUser().getPasswordHash());
 
         for (Media m : s.getUser().getSavedMedia()) {
