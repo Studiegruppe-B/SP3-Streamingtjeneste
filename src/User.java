@@ -40,33 +40,16 @@ public class User {
     // sletter users watchedHistory Array
     public void clearHistory() {
         watchedMedia.clear();
-        System.out.println("Watch history cleared");
     }
 
     //fjerner en media fra watchedHistory Array
     public void deleteFromHistory(Media media){
-        try {
-            if (watchedMedia.remove(media)) {
-                System.out.println("Media was removed from watch history");
-            } else {
-                System.out.println("Media was not found in watch history");
-            }
-        } catch (NullPointerException e) {
-            System.out.println("Watch history is already empty");
-        }
+        watchedMedia.remove(media);
     }
 
     //Fjerner en media fra savedMedia
     public void deleteFromSaved(Media media){
-        try {
-            if (savedMedia.remove(media)) {
-                System.out.println("Media was removed from saved");
-            } else {
-                System.out.println("Media was not found in saved");
-            }
-        } catch (NullPointerException e) {
-            System.out.println("Saved media is empty");
-        }
+        savedMedia.remove(media);
     }
 
 
