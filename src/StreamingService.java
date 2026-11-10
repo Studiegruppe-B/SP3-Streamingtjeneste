@@ -62,7 +62,7 @@ public class StreamingService {
     }
 
     public void saveUser() {
-        String history = String.join("," ,user.getWatchedMedia().stream().map(Media::getId).toList());
+        String history = String.join("," ,user.getHistory().stream().map(Media::getId).toList());
         String saved = String.join(",", user.getSavedMedia().stream().map(Media::getId).toList());
 
         FileIO.saveData("data/" + user.getName() + ".csv", List.of(user.getPasswordHash() + "; " + history + "; " + saved), DEFAULT_SAVE_HEADER);

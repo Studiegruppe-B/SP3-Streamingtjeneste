@@ -3,31 +3,31 @@ import java.util.ArrayList;
 public class User {
     private String name;
     private String passwordHash;
-    ArrayList<Media> watchedMedia;
+    ArrayList<Media> history;
     ArrayList<Media> savedMedia;
 
-    public User(String name, String passwordHash, ArrayList<Media> watchedMedia, ArrayList<Media> savedMedia) {
+    public User(String name, String passwordHash, ArrayList<Media> history, ArrayList<Media> savedMedia) {
         this.passwordHash = passwordHash;
         this.name = name;
-        this.watchedMedia = watchedMedia;
+        this.history = history;
         this.savedMedia = savedMedia;
     }
     // tilføjer media til watchedmedia
-    public void addWatchedMedia(Media media) {
+    public void addHistory(Media media) {
         if (media != null) {
-            watchedMedia.add(media);
+            history.add(media);
         }
     }
 
-    // tilføjer media til watched media
-    public void addSavedMedia(Media media) {
+    // Tilføjer media til watched media
+    public void addSaved(Media media) {
         if (media != null) {
             savedMedia.add(media);
         }
     }
     // getter
-    public ArrayList<Media> getWatchedMedia() {
-        return watchedMedia;
+    public ArrayList<Media> getHistory() {
+        return history;
     }
 
     //getter
@@ -37,7 +37,7 @@ public class User {
 
     // sletter users watchedHistory Array
     public void clearHistory() {
-        watchedMedia.clear();
+        history.clear();
         }
     public String getPasswordHash() {
         return this.passwordHash;
@@ -45,7 +45,7 @@ public class User {
 
     //fjerner en media fra watchedHistory Array
     public void deleteFromHistory(Media media){
-        watchedMedia.remove(media);
+        history.remove(media);
     }
 
     //Fjerner en media fra savedMedia
@@ -55,8 +55,6 @@ public class User {
     public String getName() {
         return this.name;
     }
-
-
 
 
 }
