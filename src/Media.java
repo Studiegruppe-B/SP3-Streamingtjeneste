@@ -14,4 +14,8 @@ public abstract class Media {
         this.genre = genre;
         this.rating = rating;
     }
+
+    public String getId() {
+        return this.id;
+    }
 }

@@ -47,6 +47,7 @@ class SeriesTest {
     void playEpisodes() {
         for (Episode e : se.get(2).getEpisodes()) {
             e.play();
+            System.out.println(se.get(2).getId());
         }
     }
 

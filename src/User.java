@@ -2,19 +2,12 @@ import java.util.ArrayList;
 
 public class User {
     private String name;
+    private String passwordHash;
     ArrayList<Media> watchedMedia;
     ArrayList<Media> savedMedia;
 
-    public User(String name) {
-        this.name = name;
-    }
-
-    public User(String name, ArrayList<Media> watchedMedia) {
-        this.name = name;
-        this.watchedMedia = watchedMedia;
-    }
-
-    public User(String name, ArrayList<Media> watchedMedia, ArrayList<Media> savedMedia) {
+    public User(String name, String passwordHash, ArrayList<Media> watchedMedia, ArrayList<Media> savedMedia) {
+        this.passwordHash = passwordHash;
         this.name = name;
         this.watchedMedia = watchedMedia;
         this.savedMedia = savedMedia;
@@ -40,6 +33,14 @@ public class User {
     //getter
     public ArrayList<Media> getSavedMedia() {
         return savedMedia;
+    }
+
+    public String getPasswordHash() {
+        return this.passwordHash;
+    }
+
+    public String getName() {
+        return this.name;
     }
 
 }

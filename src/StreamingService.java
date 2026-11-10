@@ -7,6 +7,7 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 
 public class StreamingService {
     private final String DEFAULT_SAVE_HEADER = "Password; History; Saved";
@@ -60,6 +61,40 @@ public class StreamingService {
         }
     }
 
+    public void saveUser() {
+        String history = String.join("," ,user.getWatchedMedia().stream().map(Media::getId).toList());
+        String saved = String.join(",", user.getSavedMedia().stream().map(Media::getId).toList());
+
+        FileIO.saveData("data/" + user.getName() + ".csv", List.of(user.getPasswordHash() + "; " + history + "; " + saved), DEFAULT_SAVE_HEADER);
+    }
+
+    public User loadUser(String username) {
+        // Read user data.
+        String[] parts = FileIO.readData("data/" + username + ".csv", true).getFirst().split(";");
+
+        // Assign passwordHash variable.
+        String passwordHash = parts[0].trim();
+
+        // Parsed 'watched' data, and add to ArrayList
+        ArrayList<Media> watched = new ArrayList<>();
+        if (parts.length > 1 && !parts[1].isBlank()) {
+            for (String id : parts[1].trim().split(",")) {
+                Media m = getMediaById(id.trim());
+                if (m != null) watched.add(m);
+            }
+        }
+
+        // Parsed 'saved' data, and add to ArrayList
+        ArrayList<Media> saved = new ArrayList<>();
+        if (parts.length > 2 && !parts[2].isBlank()) {
+            for (String id : parts[2].trim().split(",")) {
+                Media s = getMediaById(id.trim());
+                if (s != null) saved.add(s);
+            }
+        }
+        return new User(username, passwordHash, watched, saved);
+    }
+
 
     public void loadMovieData(String path) {
         ArrayList<String> movieData = FileIO.readData(path, false); // Read movie data.
@@ -101,8 +136,20 @@ public class StreamingService {
         }
     }
 
+    public User getUser() {
+        return this.user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public Media getMediaById(String id) {
+        return mediaById.get(id);
+    }
 
     public boolean addMedia(Media media) {
+        mediaById.put(media.getId(), media);
         return this.media.add(media);
     }
 

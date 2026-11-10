@@ -22,4 +22,24 @@ class StreamingServiceTest {
         assertTrue(s.checkCredentials("TestUser", "TestPassword"));
 
     }
+
+    @Test
+    void saveUser() {
+        s.loadMovieData("data/filmData.csv");
+        s.loadSeriesData("data/seriesData.csv");
+        s.setUser(new User("TestUser2", "dinmor", s.getMedia(), s.getMedia()));
+        s.saveUser();
+    }
+
+    @Test
+    void loadUser() {
+        s.loadMovieData("data/filmData.csv");
+        s.loadSeriesData("data/seriesData.csv");
+        s.setUser(s.loadUser("TestUser2"));
+        System.out.println(s.getUser().getPasswordHash());
+
+        for (Media m : s.getUser().getSavedMedia()) {
+            System.out.println(m.name);
+        }
+    }
 }
