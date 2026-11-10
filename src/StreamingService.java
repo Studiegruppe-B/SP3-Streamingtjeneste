@@ -1,94 +1,123 @@
-import menu.PageBuilder;
-import menu.PageTemplate;
 import util.FileIO;
+import util.PasswordEncryption;
 import util.TextUI;
 
+import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
 
 public class StreamingService {
+    private final String DEFAULT_SAVE_HEADER = "Password; History; Saved";
+    private final int MINIMUM_PASSWORD_LENGTH = 6;
+    private final int MINIMUM_SEARCH_LENGTH = 1;
+
     private final String name;
     private final ArrayList<Media> media;
-    private final PageBuilder pageBuilder = new PageBuilder();
-
-    //Instances of pages:
-    PageTemplate startPage = new PageTemplate();
-    PageTemplate homePage = new PageTemplate();
-    PageTemplate filterPage = new PageTemplate();
-    PageTemplate searchedPage = new PageTemplate();
-    PageTemplate genrePage = new PageTemplate();
-    PageTemplate watchedPage = new PageTemplate();
-    PageTemplate savedPage = new PageTemplate();
-    PageTemplate seasonPage = new PageTemplate();
-    PageTemplate removableSeasonPage = new PageTemplate();
-    PageTemplate PlayPage = new PageTemplate();
-    PageTemplate removablePlayPage = new PageTemplate();
+    private final HashMap<String, Media> mediaById;
+    private User user;
 
     public StreamingService(String name) {
         this.name = name;
+        this.mediaById = new HashMap<>();
         this.media = new ArrayList<>();
-    }
-
-    public void buildMenu() {
-        startPage.addSingleOptions(new String[]{"Exit", "Log in","Sign in"},
-                pageBuilder::exit,
-                ()-> System.out.println("Test1"),
-                ()-> System.out.println("Test2")//Exit knap
-                // ()->logIn(),    //LoginKnap: skal bruge goTo(homePage); hvis login godkendt
-                //  ()->signIn(),   //SigninKnap: skal bruge goTo(homePage);
-        );
-
     }
 
     public void start() {
         loadMovieData("data/filmData.csv");
         loadSeriesData("data/seriesData.csv");
-        buildMenu();
-        pageBuilder.setCurrent(startPage);
-        pageBuilder.display();
     }
 
-    public void registerUser(){
-        switch (TextUI.promptNumeric("Log in(1) or create user(2)?")){
-            case 1:
-                userLogIn();
-                break;
-            case 2:
-                createUser();
-                break;
+    public boolean checkCredentials(String username, String password){
+        try {
+            String correctPassword = FileIO.readData("data/" + username + ".csv", true).getFirst();
+            return PasswordEncryption.checkPassword(password.toCharArray(), correctPassword);
+        } catch (Exception e) {
+            System.out.println("Could not check credentials!");
         }
-
+        return false;
     }
 
-    public void userLogIn(){
-        String username = TextUI.promptText("Enter your username: ");
-        String password = TextUI.promptText("Enter your password: ");
-        String correctPassword = FileIO.readData("data/"+username+".csv", true).get(0);
-        if (password.equals(correctPassword)){
-            this.start();
+    public void createUser(String username, String password) {
+        if (password.length() < MINIMUM_PASSWORD_LENGTH) { // Check if password length is greater than 6.
+            throw new IllegalArgumentException("Password length must be greater than 6");
+        }
+        // Pre-define save path.
+        String userPath = "data/" + username + ".csv";
+
+        // Create new user save file.
+        try {
+            FileIO.createFile(userPath);
+
+            // Write password to file.
+            try {
+                FileIO.saveData(userPath, Arrays.asList(PasswordEncryption.createStoredKey(password.toCharArray())), DEFAULT_SAVE_HEADER);
+            } catch (Exception e) {
+                System.out.println("Could not encrypt password!");
+            }
+        } catch (IOException e) {
+            System.out.println("Could not create new user!");
         }
     }
 
-    public void createUser(){
-        String username = TextUI.promptText("Enter your username: ");
-        String password = TextUI.promptText("Enter your password: ");
-        while (password.length() <= 6){
-            System.out.println("Password is too short, try again");
-            password = TextUI.promptText("Enter your password: ");
-        }
-        ArrayList<String> data = new ArrayList<>();
-        data.add(password);
-        if(FileIO.createFile("data/"+username+".csv")){
-            FileIO.saveData(("data/"+username+".csv"), data, "Password:");
-            userLogIn();
-        }
+    public void saveUser() {
+        String history = String.join("," ,user.getHistory().stream().map(Media::getId).toList());
+        String saved = String.join(",", user.getSavedMedia().stream().map(Media::getId).toList());
+
+        FileIO.saveData("data/" + user.getName() + ".csv", List.of(user.getPasswordHash() + "; " + history + "; " + saved), DEFAULT_SAVE_HEADER);
     }
+
+    public User loadUser(String username) {
+        // Read user data.
+        String[] parts = FileIO.readData("data/" + username + ".csv", true).getFirst().split(";");
+
+        // Assign passwordHash variable.
+        String passwordHash = parts[0].trim();
+
+        // Parsed 'watched' data, and add to ArrayList
+        ArrayList<Media> watched = new ArrayList<>();
+        if (parts.length > 1 && !parts[1].isBlank()) {
+            for (String id : parts[1].trim().split(",")) {
+                Media m = getMediaById(id.trim());
+                if (m != null) watched.add(m);
+            }
+        }
+
+        // Parsed 'saved' data, and add to ArrayList
+        ArrayList<Media> saved = new ArrayList<>();
+        if (parts.length > 2 && !parts[2].isBlank()) {
+            for (String id : parts[2].trim().split(",")) {
+                Media s = getMediaById(id.trim());
+                if (s != null) saved.add(s);
+            }
+        }
+        return new User(username, passwordHash, watched, saved);
+    }
+
+    public ArrayList<Media> getMediaByName(String search) {
+        if (search == null || search.trim().length() < MINIMUM_SEARCH_LENGTH) {
+            throw new IllegalArgumentException("Search must be at least " + MINIMUM_SEARCH_LENGTH + " characters");
+        }
+
+        String query = search.trim().toLowerCase();
+        ArrayList<Media> results = new ArrayList<>();
+
+        for (Media m : media) {
+            if (m.getName().toLowerCase().contains(query)) {
+                results.add(m);
+            }
+        }
+        return results;
+    }
+
 
     public void loadMovieData(String path) {
         ArrayList<String> movieData = FileIO.readData(path, false); // Read movie data.
 
-        for (String s : movieData) {
-            String[] splitData = s.split(";");
+        for (int i = 0; i < movieData.size(); i++) {
+            String[] splitData = movieData.get(i).split(";");
 
             String name = splitData[0].trim();
             String year = splitData[1].trim();
@@ -96,7 +125,7 @@ public class StreamingService {
             try {
                 double rating = Double.parseDouble(splitData[3].trim().replace(",", "."));
                 // Create Movie Objects.
-                this.addMedia(new Movie(name, year, genre, rating));
+                this.addMedia(new Movie("M" + i, name, year, genre, rating));
             } catch (NumberFormatException e) {
                 System.out.println("[" + this.name + "] Could not parse movie data from file. Incorrect format!");
             }
@@ -106,8 +135,8 @@ public class StreamingService {
     public void loadSeriesData(String path) {
         ArrayList<String> seriesData = FileIO.readData(path, false);
 
-        for (String s : seriesData) {
-            String[] splitData = s.split(";");
+        for (int i = 0; i < seriesData.size(); i++) {
+            String[] splitData = seriesData.get(i).split(";");
             String name = splitData[0].trim();
             String year = splitData[1].trim();
             String[] genres = splitData[2].trim().split(", ");
@@ -117,15 +146,27 @@ public class StreamingService {
                 String[] episodes = splitData[4].trim().split(", ");
 
                 // Create series Objects.
-                this.addMedia(new Series(name, year, genres, rating, episodes));
+                this.addMedia(new Series("S" + i, name, year, genres, rating, episodes));
             } catch (NumberFormatException e) {
                 System.out.println("[" + this.name + "] Could not parse movie data from file. Incorrect format!");
             }
         }
     }
 
+    public User getUser() {
+        return this.user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public Media getMediaById(String id) {
+        return mediaById.get(id);
+    }
 
     public boolean addMedia(Media media) {
+        mediaById.put(media.getId(), media);
         return this.media.add(media);
     }
 

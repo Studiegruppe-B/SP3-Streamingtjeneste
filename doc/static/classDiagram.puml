@@ -7,13 +7,21 @@ class Main{
 class StreamingService{
 - String name
 - User user
-- ArrayList<Movie> movies
-- ArrayList<Series> series
-+ startStreamingService()
-- displayMenu()
+- ArrayList<Media>
++ void start()
 - ArrayList<Media> getMediaByName()
 - ArrayList<Media> getMediaByCategory()
-- void registerUser()
+
+- void createUser(String, String)
+- void checkCredentials(String, String)
+- void loadUser(String)
+- void saveUser(User)
+
+- void loadMovieData(String)
+- void loadSeriesData(String)
+
+- void addMedia(Media)
+- ArrayList<Media> getMedia()
 }
 
 
@@ -31,6 +39,23 @@ abstract class Media{
 }
 interface Playable {
 void play();
+}
+enum Menu{
+LOGIN_SCREEN
+HOME_SCREEN
+FILTER_SCREEN
+GENRE_SCREEN
+GENRE_RESULT_SCREEN
+WATCH_HISTORY_SCREEN
+SEARCH_RESULT_SCREEN
+SAVED_SCREEN
+SERIES_RESULT_SCREEN
+SAVED_SERIES_RESULT_SCREEN
+MOVIE_PLAY
+SAVED_PLAY
+EPISODE_SCREEN
+EXIT_APP
+menuOptions
 }
 
 class Episode implements Playable {
@@ -74,14 +99,16 @@ class User{
 - String password
 - ArrayList<Media> watchedMedia
 - ArrayList<Media> savedMedia
-+ User(String, String, Arraylist<Media>, Arraylist<Media>)
 + User(String, String)
-+ void addToHistory(Media)
-+ void addToWatchLater(Media)
-+ void deleteHistory()
++ void addHistory(Media)
++ void addSaved(Media)
+
++ void clearHistory()
 + void deleteFromHistory(Media)
-+ Arraylist<Media> getWatchedList()
-+ Arraylist<Media> getSavedMedia()
++ void deleteFromSaved()
+
++ Arraylist<Media> getWatched()
++ Arraylist<Media> getSaved()
 }
 
 package "util"{
@@ -125,7 +152,6 @@ StreamingService *-- DisplayMenu
 Media <|-- Movie
 Media <|-- Series
 Series *-- Episode
-StreamingService --> PasswordEncryption
+StreamingService *-- PasswordEncryption
 DisplayMenu --> Menu
-DisplayMenu --> TextUI
 @enduml

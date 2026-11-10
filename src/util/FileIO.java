@@ -2,6 +2,7 @@ package util;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public final class FileIO {
@@ -45,11 +46,11 @@ public final class FileIO {
         return data;
     }
 
-    public static void saveData(String path, ArrayList<String> data, String header) {
+    public static void saveData(String path, List<String> data, String header) {
         File file = new File(path); // Create new file object.
 
         try (Writer writer = new FileWriter(file)) {
-            writer.write(header); // Write the header.
+            writer.write(header +  "\n"); // Write the header.
 
             for (String s : data) {
                 writer.write(s + "\n");
@@ -59,7 +60,7 @@ public final class FileIO {
         }
     }
 
-    public static void saveData(String path, ArrayList<String> data) {
+    public static void saveData(String path, List<String> data) {
         File file = new File(path); // Create new file object.
 
         try (Writer writer = new FileWriter(file)) {
@@ -72,8 +73,7 @@ public final class FileIO {
         }
     }
 
-    public static boolean createFile(String path) {
-        try {
+    public static boolean createFile(String path) throws IOException{
             File file = new File(path);
 
             if (file.createNewFile()) {
@@ -82,9 +82,6 @@ public final class FileIO {
             } else {
                 System.out.println("[FileIO] File already exists.");
             }
-        } catch (IOException e) {
-            System.out.println("[FileIO] Could not create new file!");
-        }
         return false;
     }
 }
