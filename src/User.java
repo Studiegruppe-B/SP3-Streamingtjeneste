@@ -35,12 +35,28 @@ public class User {
         return savedMedia;
     }
 
+    // sletter users watchedHistory Array
+    public void clearHistory() {
+        watchedMedia.clear();
+        }
     public String getPasswordHash() {
         return this.passwordHash;
     }
 
+    //fjerner en media fra watchedHistory Array
+    public void deleteFromHistory(Media media){
+        watchedMedia.remove(media);
+    }
+
+    //Fjerner en media fra savedMedia
+    public void deleteFromSaved(Media media){
+        savedMedia.remove(media);
+    }
     public String getName() {
         return this.name;
     }
+
+
+
 
 }
