@@ -22,7 +22,7 @@ public class PasswordEncryption {
         PBEKeySpec spec = new PBEKeySpec(input, salt, ITTERATIONS, KEY_LENGTH);
         try {
             SecretKeyFactory skf = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA512");
-            return skf.generateSecret(spec).getEncoded();
+            return skf.generateSecret(spec).getEncoded(); //algoritme
         } finally {
             spec.clearPassword();   // sletter PBEKeySpec's kopi
         }
