@@ -40,23 +40,7 @@ abstract class Media{
 interface Playable {
 void play();
 }
-enum Menu{
-LOGIN_SCREEN
-HOME_SCREEN
-FILTER_SCREEN
-GENRE_SCREEN
-GENRE_RESULT_SCREEN
-WATCH_HISTORY_SCREEN
-SEARCH_RESULT_SCREEN
-SAVED_SCREEN
-SERIES_RESULT_SCREEN
-SAVED_SERIES_RESULT_SCREEN
-MOVIE_PLAY
-SAVED_PLAY
-EPISODE_SCREEN
-EXIT_APP
-menuOptions
-}
+
 
 class Episode implements Playable {
 - final String episode
@@ -77,20 +61,38 @@ class Series {
 + ArrayList<Episode> getEpisodes()
 }
 
-class DisplayMenu{
-- Menu current
-- final Deque<Menu> history
-- final Set<Menu> listScreens
+package "menu"{
+class PageBuilder{
+- final Deque<PageTemplate> history
+- PageTemplate current
+- boolean running
++ void goTo(PageTemplate)
++ PageTemplate back()
++ void exit()
++ boolean isRunning()
++ PageTemplate getCurrent()
++ void select(PageTemplate)
++ void display()
+}
+
+class PageTemplate{
+- String title
+- final ArrayList<Runnable> action
+- final ArrayList<String> options
++ PageTemplate(String)
++ void addSingleOptions(String[], Runnable...)
++ void addListOptions(List<String>, Consumer<Integer>)
++ void choice(int)
++ ArrayList<String> getOptions()
++ void clearOptions(int, int)
++ void setTitle(String)
++ String getTitle()
+}
+
+class MenuDisplay{
+- final PageBuilder builder
 + void showMenu()
-- void choiceHandler(String)
-- void loginMenu(String)
-- void homeMenu(String)
-- void filterMenu(String)
-- void genreMenu(String)
-- void openMedia(String, Menu, Menu)
-- void seriesMenu(String)
-- void playMenu(String)
-- void goTo(Menu)
+}
 }
 
 
@@ -138,7 +140,7 @@ class PasswordEncryption{
 + {static} boolean checkPassword(char[], String)
 }
 
-enum Menu
+
 
 
 }
@@ -148,10 +150,16 @@ StreamingService *-- Media
 StreamingService *-- FileIO
 StreamingService *-- TexUI
 StreamingService *-- User
-StreamingService *-- DisplayMenu
+StreamingService *-- PageBuilder
+StreamingService *-- PageTemplate
+PageBuilder o-- PageTemplate
+PageBuilder --> TexUI
 Media <|-- Movie
 Media <|-- Series
 Series *-- Episode
 StreamingService *-- PasswordEncryption
-DisplayMenu --> Menu
+MenuDisplay *-- PageBuilder
+MenuDisplay --> PageTemplate
+MenuDisplay --> TexUI
+
 @enduml
