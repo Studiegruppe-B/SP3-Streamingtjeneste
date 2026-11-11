@@ -107,7 +107,12 @@ public class StreamingService {
         mediaPage.addSingleOptions(new String[]{"Back"}, pageBuilder::back);
 
         if (media instanceof Movie movie) {
-            mediaPage.addSingleOptions(new String[]{"Play", "Save"}, movie::play, () -> this.user.addSaved(movie));
+            if (!this.user.hasSaved(movie)) {
+                mediaPage.addSingleOptions(new String[]{"Save"}, () -> {this.user.addSaved(movie); pageBuilder.back();});
+            } else {
+                mediaPage.addSingleOptions(new String[]{"Unsave"}, () -> {this.user.deleteFromSaved(movie); pageBuilder.back();});
+            }
+            mediaPage.addSingleOptions(new String[]{"Play"}, movie::play);
         } else if (media instanceof Series series) {
             ArrayList<Episode> episodes = series.getEpisodes();
             mediaPage.addListOptions(episodes.stream().map(Episode::getName).toList(), i -> openEpisode(episodes.get(i)));

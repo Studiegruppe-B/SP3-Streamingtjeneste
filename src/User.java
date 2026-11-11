@@ -35,6 +35,10 @@ public class User {
         return savedMedia;
     }
 
+    public boolean hasSaved(Media media) {
+        return this.savedMedia.contains(media);
+    }
+
     // sletter users watchedHistory Array
     public void clearHistory() {
         history.clear();
