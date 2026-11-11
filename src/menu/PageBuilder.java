@@ -16,8 +16,9 @@ public class PageBuilder {
         history.push(current);
         current = next;
     }
-    public  PageTemplate back(){
-        return current = history.pop();
+    public void back(){
+        current.clearOptions();
+        current = history.pop();
     }
 
     public void exit() {

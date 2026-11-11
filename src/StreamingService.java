@@ -90,27 +90,33 @@ public class StreamingService {
 
         homePage.addSingleOptions(new String[]{"Exit", "Search"},
                 pageBuilder::exit,
-                //  ()->search(),  //Søg efter film: skal bruge goTo(searchedPage);
+
+                // Create search page with nested media page.
                 ()-> {
                     String query = TextUI.promptText("Please enter the whole or a part of a title: ");
 
                     ArrayList<Media> titles = getMediaByName(query);
 
+                    searchPage.addSingleOptions(new String[] {"Back"}, pageBuilder::back);
+
                     searchPage.addListOptions(titles.stream().map(Media::getName).toList(), i -> {
+
                         Media currentMedia = titles.get(i);
 
                         if (currentMedia instanceof Movie) {
-                            mediaPage.addSingleOptions(new String[]{"Play"}, () -> {
+                            mediaPage.addSingleOptions(new String[]{"Back", "Play"}, pageBuilder::back, () -> {
                                 ((Movie) currentMedia).play();
                             });
                         } else {
                             ArrayList<Episode> episodes = ((Series) currentMedia).getEpisodes();
 
+                            searchPage.addSingleOptions(new String[] {"Back"}, pageBuilder::back);
+
                             mediaPage.addListOptions(episodes.stream().map(Episode::getName).toList(), e -> {
                                 Episode currentEpisode = episodes.get(e);
 
                                 mediaPage.clearOptions();
-                                mediaPage.addSingleOptions(new String[]{"Play"}, currentEpisode::play);
+                                mediaPage.addSingleOptions(new String[]{"Back", "Play"}, pageBuilder::back, currentEpisode::play);
                             });
                         }
                         pageBuilder.goTo(mediaPage);
