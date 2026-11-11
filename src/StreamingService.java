@@ -24,9 +24,9 @@ public class StreamingService {
     private PageBuilder pageBuilder = new PageBuilder();
 
     //Instances of pages:
-    private final PageTemplate startPage = new PageTemplate();
-    private final PageTemplate homePage = new PageTemplate();
-    private final PageTemplate searchPage = new PageTemplate();
+    private final PageTemplate startPage = new PageTemplate("Chill - StreamingService");
+    private final PageTemplate homePage = new PageTemplate("Homepage");
+/*    private final PageTemplate searchPage = new PageTemplate();
     private final PageTemplate filterPage = new PageTemplate();
     private final PageTemplate genrePage = new PageTemplate();
     private final PageTemplate watchedPage = new PageTemplate();
@@ -38,7 +38,7 @@ public class StreamingService {
     private final PageTemplate seasonPage = new PageTemplate();
     private final PageTemplate savedSeasonPage = new PageTemplate();
     private final PageTemplate normalPlayablePage = new PageTemplate();
-    private final PageTemplate SavedPlayablePage = new PageTemplate();
+    private final PageTemplate SavedPlayablePage = new PageTemplate();*/
 
     public StreamingService(String name) {
         this.name = name;
@@ -66,6 +66,7 @@ public class StreamingService {
                     // Check if input credentials are OK
                     if (checkCredentials(username, password)) {
                         setUser(loadUser(username));
+                        homePage.setTitle(homePage.getTitle() + " (User: " + this.getUser().getName() + ")");
                         pageBuilder.goTo(homePage);
                     }
                 },
@@ -82,7 +83,6 @@ public class StreamingService {
                     }
                 }
         );
-        startPage.setTitle("Welcome to Chill");
 
         homePage.addSingleOptions(new String[]{"Exit", "Search"},
                 pageBuilder::exit,

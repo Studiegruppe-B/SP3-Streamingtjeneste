@@ -10,13 +10,11 @@ public class PageTemplate {
 
     private String title;
 
-    private final ArrayList<Runnable> action;
-    private final ArrayList<String> options;
+    private final ArrayList<Runnable> action = new ArrayList<>();
+    private final ArrayList<String> options = new ArrayList<>();
 
-    public PageTemplate() {
-        this.options = new ArrayList<>();
-        this.action = new ArrayList<>();
-        this.title = "New Page";
+    public PageTemplate(String title) {
+        this.title = title;
     }
 
     // Skriv manuelt options, hvor hver option får sin egen lambda.
