@@ -61,19 +61,24 @@ public class StreamingService {
 
     private void buildMenu() {
         startPage.addSingleOptions(new String[]{"Exit", "Goto homepage", "Log in", "Sign up"},
-                pageBuilder::exit,
+                this::endSession,
                 () -> pageBuilder.goTo(homePage),
                 this::login,
                 this::signUp
         );
 
         homePage.addSingleOptions(new String[]{"Exit", "Search", "Saved"},
-                pageBuilder::exit,
+                this::endSession,
                 this::openSearch,
                 this::openSaved
         );
 
         pageBuilder.select(startPage);
+    }
+
+    private void endSession() {
+        pageBuilder.exit();
+        saveUser(this.user);
     }
 
     private void openSaved() {
@@ -148,14 +153,12 @@ public class StreamingService {
         }
     }
 
-
-
     public boolean checkCredentials(String username, String password){
         try {
-            String correctPassword = FileIO.readData("data/" + username + ".csv", true).getFirst();
+            String correctPassword = FileIO.readData("data/" + username + ".csv", true).getFirst().split(";")[0];
             return PasswordEncryption.checkPassword(password.toCharArray(), correctPassword);
         } catch (Exception e) {
-            System.out.println("User not found!");
+            System.out.println("User does not exist!");
         }
         return false;
     }
@@ -182,8 +185,8 @@ public class StreamingService {
         }
     }
 
-    public void saveUser() {
-        String history = String.join("," ,user.getHistory().stream().map(Media::getId).toList());
+    public void saveUser(User user) {
+        String history = String.join("," , user.getHistory().stream().map(Media::getId).toList());
         String saved = String.join(",", user.getSavedMedia().stream().map(Media::getId).toList());
 
         FileIO.saveData("data/" + user.getName() + ".csv", List.of(user.getPasswordHash() + "; " + history + "; " + saved), DEFAULT_SAVE_HEADER);
