@@ -78,7 +78,7 @@ public class StreamingService {
 
     private void endSession() {
         pageBuilder.exit();
-        saveUser(this.user);
+        if (this.user != null) saveUser(this.user);
     }
 
     private void openSaved() {
