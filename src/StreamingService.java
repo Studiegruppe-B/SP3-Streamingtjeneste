@@ -29,6 +29,7 @@ public class StreamingService {
     private final PageTemplate homePage = new PageTemplate("Homepage");
     private final PageTemplate searchPage = new PageTemplate("Search Page");
     private final PageTemplate mediaPage = new PageTemplate("Media Page");
+    private final PageTemplate episodePage = new PageTemplate("Episode Page");
 
     /*
     private final PageTemplate filterPage = new PageTemplate();
@@ -59,76 +60,79 @@ public class StreamingService {
 
     private void buildMenu() {
         startPage.addSingleOptions(new String[]{"Exit", "Goto homepage", "Log in", "Sign up"},
-                pageBuilder::exit, //Exit knap
+                pageBuilder::exit,
                 () -> pageBuilder.goTo(homePage),
-
-                // Login prompt:
-                () -> {
-                    String username = TextUI.promptText("Please enter your username");
-                    String password = TextUI.promptText("Please enter your password");
-
-                    // Check if input credentials are OK
-                    if (checkCredentials(username, password)) {
-                        setUser(loadUser(username));
-                        homePage.setTitle(homePage.getTitle() + " (User: " + this.getUser().getName() + ")");
-                        pageBuilder.goTo(homePage);
-                    }
-                },
-
-                // Sign up prompt:
-                () -> {
-                    String username = TextUI.promptText("Please enter your username");
-                    String password = TextUI.promptText("Please enter your password");
-
-                    try {
-                        createUser(username, password);
-                    } catch (IllegalArgumentException e) {
-                        TextUI.userMessage(e.getMessage());
-                    }
-                }
+                this::login,
+                this::signUp
         );
 
         homePage.addSingleOptions(new String[]{"Exit", "Search"},
                 pageBuilder::exit,
-
-                // Create search page with nested media page.
-                ()-> {
-                    String query = TextUI.promptText("Please enter the whole or a part of a title: ");
-
-                    ArrayList<Media> titles = getMediaByName(query);
-
-                    searchPage.addSingleOptions(new String[] {"Back"}, pageBuilder::back);
-
-                    searchPage.addListOptions(titles.stream().map(Media::getName).toList(), i -> {
-
-                        Media currentMedia = titles.get(i);
-
-                        if (currentMedia instanceof Movie) {
-                            mediaPage.addSingleOptions(new String[]{"Back", "Play"}, pageBuilder::back, () -> {
-                                ((Movie) currentMedia).play();
-                            });
-                        } else {
-                            ArrayList<Episode> episodes = ((Series) currentMedia).getEpisodes();
-
-                            searchPage.addSingleOptions(new String[] {"Back"}, pageBuilder::back);
-
-                            mediaPage.addListOptions(episodes.stream().map(Episode::getName).toList(), e -> {
-                                Episode currentEpisode = episodes.get(e);
-
-                                mediaPage.clearOptions();
-                                mediaPage.addSingleOptions(new String[]{"Back", "Play"}, pageBuilder::back, currentEpisode::play);
-                            });
-                        }
-                        pageBuilder.goTo(mediaPage);
-                    });
-                    pageBuilder.goTo(searchPage);
-                }
+                this::openSearch
         );
-
-
 
         pageBuilder.select(startPage);
     }
+
+    // Builds the search page from the user's query.
+    private void openSearch() {
+        String query = TextUI.promptText("Please enter the whole or a part of a title: ");
+
+        ArrayList<Media> titles;
+        try {
+            titles = getMediaByName(query);
+        } catch (IllegalArgumentException e) {
+            TextUI.userMessage(e.getMessage());
+            return;
+        }
+
+        searchPage.addSingleOptions(new String[]{"Back"}, pageBuilder::back);
+        searchPage.addListOptions(titles.stream().map(Media::getName).toList(), i -> openMedia(titles.get(i)));
+        pageBuilder.goTo(searchPage);
+    }
+
+    // Builds the media page: a play option for movies, an episode list for series.
+    private void openMedia(Media media) {
+        mediaPage.addSingleOptions(new String[]{"Back"}, pageBuilder::back);
+
+        if (media instanceof Movie movie) {
+            mediaPage.addSingleOptions(new String[]{"Play"}, movie::play);
+        } else if (media instanceof Series series) {
+            ArrayList<Episode> episodes = series.getEpisodes();
+            mediaPage.addListOptions(episodes.stream().map(Episode::getName).toList(), i -> openEpisode(episodes.get(i)));
+        }
+        pageBuilder.goTo(mediaPage);
+    }
+
+    private void openEpisode(Episode episode) {
+        episodePage.addSingleOptions(new String[]{"Back", "Play"}, pageBuilder::back, episode::play);
+        pageBuilder.goTo(episodePage);
+    }
+
+    private void login() {
+        String username = TextUI.promptText("Please enter your username");
+        String password = TextUI.promptText("Please enter your password");
+
+        // Check if input credentials are OK
+        if (checkCredentials(username, password)) {
+            setUser(loadUser(username));
+            homePage.setTitle(homePage.getTitle() + " (User: " + this.getUser().getName() + ")");
+            pageBuilder.goTo(homePage);
+        }
+    }
+
+    private void signUp() {
+        String username = TextUI.promptText("Please enter your username");
+        String password = TextUI.promptText("Please enter your password");
+
+        try {
+            createUser(username, password);
+        } catch (IllegalArgumentException e) {
+            TextUI.userMessage(e.getMessage());
+        }
+    }
+
+
 
     public boolean checkCredentials(String username, String password){
         try {
