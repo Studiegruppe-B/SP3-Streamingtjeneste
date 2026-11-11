@@ -5,6 +5,7 @@ import util.PasswordEncryption;
 import util.TextUI;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -26,7 +27,10 @@ public class StreamingService {
     //Instances of pages:
     private final PageTemplate startPage = new PageTemplate("Chill - StreamingService");
     private final PageTemplate homePage = new PageTemplate("Homepage");
-/*    private final PageTemplate searchPage = new PageTemplate();
+    private final PageTemplate searchPage = new PageTemplate("Search Page");
+    private final PageTemplate mediaPage = new PageTemplate("Media Page");
+
+    /*
     private final PageTemplate filterPage = new PageTemplate();
     private final PageTemplate genrePage = new PageTemplate();
     private final PageTemplate watchedPage = new PageTemplate();
@@ -92,7 +96,26 @@ public class StreamingService {
 
                     ArrayList<Media> titles = getMediaByName(query);
 
-                    int picked = TextUI.promptMenuChoice(titles.stream().map(Media::getName).toList(), "Search result:");
+                    searchPage.addListOptions(titles.stream().map(Media::getName).toList(), i -> {
+                        Media currentMedia = titles.get(i);
+
+                        if (currentMedia instanceof Movie) {
+                            mediaPage.addSingleOptions(new String[]{"Play"}, () -> {
+                                ((Movie) currentMedia).play();
+                            });
+                        } else {
+                            ArrayList<Episode> episodes = ((Series) currentMedia).getEpisodes();
+
+                            mediaPage.addListOptions(episodes.stream().map(Episode::getName).toList(), e -> {
+                                Episode currentEpisode = episodes.get(e);
+
+                                mediaPage.clearOptions();
+                                mediaPage.addSingleOptions(new String[]{"Play"}, currentEpisode::play);
+                            });
+                        }
+                        pageBuilder.goTo(mediaPage);
+                    });
+                    pageBuilder.goTo(searchPage);
                 }
         );
 

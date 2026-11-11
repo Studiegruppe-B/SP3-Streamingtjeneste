@@ -45,7 +45,7 @@ public class PageTemplate {
     }
 
     // Rydder siden, så den kan bygges forfra under runtime
-    public void clearOptions(int indexFrom, int indexTo) {
+    public void clearOptions() {
         options.clear();
         action.clear();
     }
