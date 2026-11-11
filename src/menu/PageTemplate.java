@@ -8,12 +8,15 @@ import java.util.function.Consumer;
 
 public class PageTemplate {
 
+    private String title;
+
     private final ArrayList<Runnable> action;
     private final ArrayList<String> options;
 
     public PageTemplate() {
         this.options = new ArrayList<>();
         this.action = new ArrayList<>();
+        this.title = "New Page";
     }
 
     // Skriv manuelt options, hvor hver option får sin egen lambda.
@@ -48,6 +51,16 @@ public class PageTemplate {
         options.clear();
         action.clear();
     }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getTitle() {
+        return this.title;
+    }
+
+
 
 
 

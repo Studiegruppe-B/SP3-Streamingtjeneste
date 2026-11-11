@@ -21,7 +21,7 @@ public class StreamingService {
     private User user;
 
     // Menu page templates
-    PageBuilder pageBuilder = new PageBuilder();
+    private PageBuilder pageBuilder = new PageBuilder();
 
     //Instances of pages:
     private final PageTemplate startPage = new PageTemplate();
@@ -68,8 +68,6 @@ public class StreamingService {
                         setUser(loadUser(username));
                         pageBuilder.goTo(homePage);
                     }
-
-
                 },
 
                 // Sign up prompt:
@@ -84,6 +82,7 @@ public class StreamingService {
                     }
                 }
         );
+        startPage.setTitle("Welcome to Chill");
 
         homePage.addSingleOptions(new String[]{"Exit", "Search"},
                 pageBuilder::exit,
