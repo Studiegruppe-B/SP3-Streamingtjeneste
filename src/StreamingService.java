@@ -30,6 +30,7 @@ public class StreamingService {
     private final PageTemplate searchPage = new PageTemplate("Search Page");
     private final PageTemplate mediaPage = new PageTemplate("Media Page");
     private final PageTemplate episodePage = new PageTemplate("Episode Page");
+    private final PageTemplate savedPage = new PageTemplate("Saved Videos");
 
     /*
     private final PageTemplate filterPage = new PageTemplate();
@@ -66,13 +67,23 @@ public class StreamingService {
                 this::signUp
         );
 
-        homePage.addSingleOptions(new String[]{"Exit", "Search"},
+        homePage.addSingleOptions(new String[]{"Exit", "Search", "Saved"},
                 pageBuilder::exit,
-                this::openSearch
+                this::openSearch,
+                this::openSaved
         );
 
         pageBuilder.select(startPage);
     }
+
+    private void openSaved() {
+        ArrayList<Media> titles = user.getSavedMedia();
+
+        savedPage.addSingleOptions(new String[]{"Back"}, pageBuilder::back);
+        savedPage.addListOptions(titles.stream().map(Media::getName).toList(), i -> openMedia(titles.get(i)));
+        pageBuilder.goTo(savedPage);
+    }
+
 
     // Builds the search page from the user's query.
     private void openSearch() {
@@ -96,7 +107,7 @@ public class StreamingService {
         mediaPage.addSingleOptions(new String[]{"Back"}, pageBuilder::back);
 
         if (media instanceof Movie movie) {
-            mediaPage.addSingleOptions(new String[]{"Play"}, movie::play);
+            mediaPage.addSingleOptions(new String[]{"Play", "Save"}, movie::play, () -> this.user.addSaved(movie));
         } else if (media instanceof Series series) {
             ArrayList<Episode> episodes = series.getEpisodes();
             mediaPage.addListOptions(episodes.stream().map(Episode::getName).toList(), i -> openEpisode(episodes.get(i)));
@@ -105,7 +116,7 @@ public class StreamingService {
     }
 
     private void openEpisode(Episode episode) {
-        episodePage.addSingleOptions(new String[]{"Back", "Play"}, pageBuilder::back, episode::play);
+        episodePage.addSingleOptions(new String[]{"Back", "Play", "Save"}, pageBuilder::back, episode::play, () -> this.user.addSaved(episode.getSeries()));
         pageBuilder.goTo(episodePage);
     }
 

@@ -23,4 +23,8 @@ public class Episode implements Playable {
     public String getName() {
         return this.name;
     }
+
+    public Series getSeries() {
+        return this.parent;
+    }
 }
