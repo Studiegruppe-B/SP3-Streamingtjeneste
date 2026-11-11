@@ -16,8 +16,6 @@ public class PageTemplate {
         this.action = new ArrayList<>();
     }
 
-
-
     // Skriv manuelt options, hvor hver option får sin egen lambda.
     public void addSingleOptions(String[] texts, Runnable... newActions) {
         if (texts.length != newActions.length) {

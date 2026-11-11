@@ -1,9 +1,10 @@
+import menu.PageBuilder;
+import menu.PageTemplate;
 import util.FileIO;
 import util.PasswordEncryption;
 import util.TextUI;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -15,19 +16,90 @@ public class StreamingService {
     private final int MINIMUM_SEARCH_LENGTH = 1;
 
     private final String name;
-    private final ArrayList<Media> media;
-    private final HashMap<String, Media> mediaById;
+    private final ArrayList<Media> media = new ArrayList<>();
+    private final HashMap<String, Media> mediaById = new HashMap<>();
     private User user;
+
+    // Menu page templates
+    PageBuilder pageBuilder = new PageBuilder();
+
+    //Instances of pages:
+    private final PageTemplate startPage = new PageTemplate();
+    private final PageTemplate homePage = new PageTemplate();
+    private final PageTemplate searchPage = new PageTemplate();
+    private final PageTemplate filterPage = new PageTemplate();
+    private final PageTemplate genrePage = new PageTemplate();
+    private final PageTemplate watchedPage = new PageTemplate();
+    private final PageTemplate savedPage = new PageTemplate();
+    private final PageTemplate mediaPage = new PageTemplate();
+    private final PageTemplate inWatchedPage = new PageTemplate();
+    private final PageTemplate inGenrePage = new PageTemplate();
+    private final PageTemplate inSavedPage = new PageTemplate();
+    private final PageTemplate seasonPage = new PageTemplate();
+    private final PageTemplate savedSeasonPage = new PageTemplate();
+    private final PageTemplate normalPlayablePage = new PageTemplate();
+    private final PageTemplate SavedPlayablePage = new PageTemplate();
 
     public StreamingService(String name) {
         this.name = name;
-        this.mediaById = new HashMap<>();
-        this.media = new ArrayList<>();
     }
 
     public void start() {
         loadMovieData("data/filmData.csv");
         loadSeriesData("data/seriesData.csv");
+        buildMenu();
+
+        // Display built menu.
+        pageBuilder.display();
+    }
+
+    private void buildMenu() {
+        startPage.addSingleOptions(new String[]{"Exit", "Goto homepage", "Log in", "Sign up"},
+                pageBuilder::exit, //Exit knap
+                () -> pageBuilder.goTo(homePage),
+
+                // Login prompt:
+                () -> {
+                    String username = TextUI.promptText("Please enter your username");
+                    String password = TextUI.promptText("Please enter your password");
+
+                    // Check if input credentials are OK
+                    if (checkCredentials(username, password)) {
+                        setUser(loadUser(username));
+                        pageBuilder.goTo(homePage);
+                    }
+
+
+                },
+
+                // Sign up prompt:
+                () -> {
+                    String username = TextUI.promptText("Please enter your username");
+                    String password = TextUI.promptText("Please enter your password");
+
+                    try {
+                        createUser(username, password);
+                    } catch (IllegalArgumentException e) {
+                        TextUI.userMessage(e.getMessage());
+                    }
+                }
+        );
+
+        homePage.addSingleOptions(new String[]{"Exit", "Search"},
+                pageBuilder::exit,
+                //  ()->search(),  //Søg efter film: skal bruge goTo(searchedPage);
+                ()-> {
+                    String query = TextUI.promptText("Please enter the whole or a part of a title: ");
+
+                    ArrayList<Media> titles = getMediaByName(query);
+
+                    int picked = TextUI.promptMenuChoice(titles.stream().map(Media::getName).toList(), "Search result:");
+                }
+        );
+
+
+
+        pageBuilder.select(startPage);
     }
 
     public boolean checkCredentials(String username, String password){
@@ -35,12 +107,12 @@ public class StreamingService {
             String correctPassword = FileIO.readData("data/" + username + ".csv", true).getFirst();
             return PasswordEncryption.checkPassword(password.toCharArray(), correctPassword);
         } catch (Exception e) {
-            System.out.println("Could not check credentials!");
+            System.out.println("User not found!");
         }
         return false;
     }
 
-    public void createUser(String username, String password) {
+    public void createUser(String username, String password) throws IllegalArgumentException {
         if (password.length() < MINIMUM_PASSWORD_LENGTH) { // Check if password length is greater than 6.
             throw new IllegalArgumentException("Password length must be greater than 6");
         }

@@ -4,8 +4,12 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.logging.LogManager;
+import java.util.logging.Logger;
 
 public final class FileIO {
+
+    private static final Logger LOGGER = Logger.getLogger( FileIO.class.getName() );
 
     public static ArrayList<String> readData(String path, boolean skipHeader) {
         ArrayList<String> data = new ArrayList<>();
@@ -20,7 +24,7 @@ public final class FileIO {
                 data.add(scan.nextLine());
             }
         } catch (FileNotFoundException e) {
-            System.out.println("[FileIO] File not found!");
+            LOGGER.warning("[FileIO] File not found!");
         }
         return data;
     }
@@ -41,7 +45,7 @@ public final class FileIO {
                 counter++;
             }
         } catch (FileNotFoundException e) {
-            System.out.println("[FileIO] File not found!");
+            LOGGER.warning("[FileIO] File not found!");
         }
         return data;
     }
@@ -56,7 +60,7 @@ public final class FileIO {
                 writer.write(s + "\n");
             }
         } catch (IOException e) {
-            System.out.println("[FileIO] File not found!");
+            LOGGER.warning("[FileIO] File not found!");
         }
     }
 
@@ -69,7 +73,7 @@ public final class FileIO {
                 writer.write(s + "\n");
             }
         } catch (IOException e) {
-            System.out.println("[FileIO] File not found!");
+            LOGGER.warning("[FileIO] File not found!");
         }
     }
 
@@ -77,10 +81,10 @@ public final class FileIO {
             File file = new File(path);
 
             if (file.createNewFile()) {
-                System.out.println("[FileIO] Created new file: " + file.getName());
+                LOGGER.info("[FileIO] Created new file: " + file.getName());
                 return true;
             } else {
-                System.out.println("[FileIO] File already exists.");
+                LOGGER.warning("[FileIO] File already exists.");
             }
         return false;
     }

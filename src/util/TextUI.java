@@ -2,6 +2,7 @@ package util;
 
 import java.util.ArrayList;
 import java.util.InputMismatchException;
+import java.util.List;
 import java.util.Scanner;
 
 public class TextUI {
@@ -43,7 +44,7 @@ public class TextUI {
         return input;
     }
 
-    public static ArrayList<String> promptChoice(ArrayList<String> options, int limit, String msg) {
+    public static ArrayList<String> promptChoice(List<String> options, int limit, String msg) {
         ArrayList<String> choices = new ArrayList<>();
 
         while (choices.size() < limit) {
@@ -58,7 +59,7 @@ public class TextUI {
         return choices;
     }
 
-    public static void displayList(ArrayList<String> list, String msg, boolean numbered) {//parameter der forstæller OM listen er nummereret eller ej.
+    public static void displayList(List<String> list, String msg, boolean numbered) {//parameter der forstæller OM listen er nummereret eller ej.
         System.out.println(msg);
         for (int i = 0; i < list.size(); i++) {
             if (numbered) {
@@ -69,7 +70,7 @@ public class TextUI {
         }
     }
 
-    public static int promptMenuChoice(ArrayList<String> menu, String msg) {
+    public static int promptMenuChoice(List<String> menu, String msg) {
         displayList(menu, msg, true);
         return promptNumeric("Write a number");
     }
