@@ -56,7 +56,7 @@ class  StreamingServiceTest {
         s.loadMovieData("data/filmData.csv");
         s.loadSeriesData("data/seriesData.csv");
         s.setUser(new User("TestUser2", "dinmor", s.getMedia(), s.getMedia()));
-        s.saveUser();
+        s.saveUser(s.getUser());
     }
 
     @Test

@@ -16,8 +16,8 @@ public class PageBuilder {
         history.push(current);
         current = next;
     }
-    public  PageTemplate back(){
-        return current = history.pop();
+    public void back(){
+        current = history.pop();
     }
 
     public void exit() {
@@ -40,7 +40,8 @@ public class PageBuilder {
         }
         while (this.isRunning()) {
             PageTemplate current = this.getCurrent();
-            int choice = TextUI.promptMenuChoice(current.getOptions(), "Choose:");
+            current.rebuild();
+            int choice = TextUI.promptMenuChoice(current.getOptions(), this.getCurrent().getTitle());
 
             if (choice >= 1 && choice <= current.getOptions().size()) {
                 current.choice(choice - 1);

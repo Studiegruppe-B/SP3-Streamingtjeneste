@@ -5,6 +5,7 @@ import util.PasswordEncryption;
 import util.TextUI;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -21,12 +22,18 @@ public class StreamingService {
     private User user;
 
     // Menu page templates
-    PageBuilder pageBuilder = new PageBuilder();
+    private PageBuilder pageBuilder = new PageBuilder();
 
     //Instances of pages:
-    private final PageTemplate startPage = new PageTemplate();
-    private final PageTemplate homePage = new PageTemplate();
-    private final PageTemplate searchPage = new PageTemplate();
+    private final PageTemplate startPage = new PageTemplate("Chill - StreamingService");
+    private final PageTemplate homePage = new PageTemplate("Homepage");
+    private final PageTemplate searchPage = new PageTemplate("Search Page");
+    private final PageTemplate mediaPage = new PageTemplate("Media Page");
+    private final PageTemplate episodePage = new PageTemplate("Episode Page");
+    private final PageTemplate savedPage = new PageTemplate("Saved Videos");
+    private final PageTemplate historyPage = new PageTemplate("History Page");
+
+    /*
     private final PageTemplate filterPage = new PageTemplate();
     private final PageTemplate genrePage = new PageTemplate();
     private final PageTemplate watchedPage = new PageTemplate();
@@ -38,7 +45,7 @@ public class StreamingService {
     private final PageTemplate seasonPage = new PageTemplate();
     private final PageTemplate savedSeasonPage = new PageTemplate();
     private final PageTemplate normalPlayablePage = new PageTemplate();
-    private final PageTemplate SavedPlayablePage = new PageTemplate();
+    private final PageTemplate SavedPlayablePage = new PageTemplate();*/
 
     public StreamingService(String name) {
         this.name = name;
@@ -55,59 +62,125 @@ public class StreamingService {
 
     private void buildMenu() {
         startPage.addSingleOptions(new String[]{"Exit", "Goto homepage", "Log in", "Sign up"},
-                pageBuilder::exit, //Exit knap
+                this::endSession,
                 () -> pageBuilder.goTo(homePage),
-
-                // Login prompt:
-                () -> {
-                    String username = TextUI.promptText("Please enter your username");
-                    String password = TextUI.promptText("Please enter your password");
-
-                    // Check if input credentials are OK
-                    if (checkCredentials(username, password)) {
-                        setUser(loadUser(username));
-                        pageBuilder.goTo(homePage);
-                    }
-
-
-                },
-
-                // Sign up prompt:
-                () -> {
-                    String username = TextUI.promptText("Please enter your username");
-                    String password = TextUI.promptText("Please enter your password");
-
-                    try {
-                        createUser(username, password);
-                    } catch (IllegalArgumentException e) {
-                        TextUI.userMessage(e.getMessage());
-                    }
-                }
+                this::login,
+                this::signUp
         );
 
-        homePage.addSingleOptions(new String[]{"Exit", "Search"},
-                pageBuilder::exit,
-                //  ()->search(),  //Søg efter film: skal bruge goTo(searchedPage);
-                ()-> {
-                    String query = TextUI.promptText("Please enter the whole or a part of a title: ");
-
-                    ArrayList<Media> titles = getMediaByName(query);
-
-                    int picked = TextUI.promptMenuChoice(titles.stream().map(Media::getName).toList(), "Search result:");
-                }
+        homePage.addSingleOptions(new String[]{"Exit", "Search", "Saved", "History"},
+                this::endSession,
+                this::openSearch,
+                this::openSaved,
+                this::openHistory
         );
-
-
 
         pageBuilder.select(startPage);
     }
 
+    private void endSession() {
+        pageBuilder.exit();
+        if (this.user != null) saveUser(this.user);
+    }
+
+    private void openSaved() {
+        savedPage.setBuilder(() -> {
+            ArrayList<Media> titles = user.getSavedMedia();
+
+            savedPage.addSingleOptions(new String[]{"Back"}, pageBuilder::back);
+            savedPage.addListOptions(titles.stream().map(Media::getName).toList(), i -> openMedia(titles.get(i)));
+        });
+        pageBuilder.goTo(savedPage);
+    }
+
+    private void openHistory() {
+        historyPage.setBuilder(() -> {
+            ArrayList<Media> titles = user.getHistory();
+
+            historyPage.addSingleOptions(new String[]{"Back", "Clear History"}, pageBuilder::back, () -> {this.user.clearHistory(); pageBuilder.back();});
+            historyPage.addListOptions(titles.stream().map(Media::getName).toList(), i -> openMedia(titles.get(i)));
+        });
+        pageBuilder.goTo(historyPage);
+    }
+
+
+    // Builds the search page from the user's query.
+    private void openSearch() {
+        String query = TextUI.promptText("Please enter the whole or a part of a title: ");
+
+        ArrayList<Media> titles;
+        try {
+            titles = getMediaByName(query);
+        } catch (IllegalArgumentException e) {
+            TextUI.userMessage(e.getMessage());
+            return;
+        }
+
+        // The query is asked once, outside the builder, so rebuilding doesn't prompt again.
+        searchPage.setBuilder(() -> {
+            searchPage.addSingleOptions(new String[]{"Back"}, pageBuilder::back);
+            searchPage.addListOptions(titles.stream().map(Media::getName).toList(), i -> openMedia(titles.get(i)));
+        });
+        pageBuilder.goTo(searchPage);
+    }
+
+    // Builds the media page: a play option for movies, an episode list for series.
+    private void openMedia(Media media) {
+        mediaPage.setBuilder(() -> {
+            mediaPage.addSingleOptions(new String[]{"Back"}, pageBuilder::back);
+
+            if (!this.user.hasSaved(media)) {
+                mediaPage.addSingleOptions(new String[]{"Save"}, () -> this.user.addSaved(media));
+            } else {
+                mediaPage.addSingleOptions(new String[]{"Unsave"}, () -> this.user.deleteFromSaved(media));
+            }
+
+            if (media instanceof Movie movie) {
+                mediaPage.addSingleOptions(new String[]{"Play"}, () -> {movie.play(); this.user.addHistory(movie);});
+            } else if (media instanceof Series series) {
+                ArrayList<Episode> episodes = series.getEpisodes();
+                mediaPage.addListOptions(episodes.stream().map(Episode::getName).toList(), i -> openEpisode(episodes.get(i)));
+            }
+        });
+        pageBuilder.goTo(mediaPage);
+    }
+
+    private void openEpisode(Episode episode) {
+        episodePage.setBuilder(() ->
+                episodePage.addSingleOptions(new String[]{"Back", "Play"}, pageBuilder::back, episode::play)
+        );
+        pageBuilder.goTo(episodePage);
+    }
+
+    private void login() {
+        String username = TextUI.promptText("Please enter your username");
+        String password = TextUI.promptText("Please enter your password");
+
+        // Check if input credentials are OK
+        if (checkCredentials(username, password)) {
+            setUser(loadUser(username));
+            homePage.setTitle(homePage.getTitle() + " (User: " + this.getUser().getName() + ")");
+            pageBuilder.goTo(homePage);
+        }
+    }
+
+    private void signUp() {
+        String username = TextUI.promptText("Please enter your username");
+        String password = TextUI.promptText("Please enter your password");
+
+        try {
+            createUser(username, password);
+        } catch (IllegalArgumentException e) {
+            TextUI.userMessage(e.getMessage());
+        }
+    }
+
     public boolean checkCredentials(String username, String password){
         try {
-            String correctPassword = FileIO.readData("data/" + username + ".csv", true).getFirst();
+            String correctPassword = FileIO.readData("data/" + username + ".csv", true).getFirst().split(";")[0];
             return PasswordEncryption.checkPassword(password.toCharArray(), correctPassword);
         } catch (Exception e) {
-            System.out.println("User not found!");
+            System.out.println("User does not exist!");
         }
         return false;
     }
@@ -134,8 +207,8 @@ public class StreamingService {
         }
     }
 
-    public void saveUser() {
-        String history = String.join("," ,user.getHistory().stream().map(Media::getId).toList());
+    public void saveUser(User user) {
+        String history = String.join("," , user.getHistory().stream().map(Media::getId).toList());
         String saved = String.join(",", user.getSavedMedia().stream().map(Media::getId).toList());
 
         FileIO.saveData("data/" + user.getName() + ".csv", List.of(user.getPasswordHash() + "; " + history + "; " + saved), DEFAULT_SAVE_HEADER);

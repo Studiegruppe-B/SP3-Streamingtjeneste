@@ -8,12 +8,14 @@ import java.util.function.Consumer;
 
 public class PageTemplate {
 
-    private final ArrayList<Runnable> action;
-    private final ArrayList<String> options;
+    private String title;
 
-    public PageTemplate() {
-        this.options = new ArrayList<>();
-        this.action = new ArrayList<>();
+    private final ArrayList<Runnable> action = new ArrayList<>();
+    private final ArrayList<String> options = new ArrayList<>();
+    private Runnable builder;
+
+    public PageTemplate(String title) {
+        this.title = title;
     }
 
     // Skriv manuelt options, hvor hver option får sin egen lambda.
@@ -44,10 +46,32 @@ public class PageTemplate {
     }
 
     // Rydder siden, så den kan bygges forfra under runtime
-    public void clearOptions(int indexFrom, int indexTo) {
+    public void clearOptions() {
         options.clear();
         action.clear();
     }
+
+    // Sætter den lambda, der bygger sidens options, hver gang siden vises.
+    public void setBuilder(Runnable builder) {
+        this.builder = builder;
+    }
+
+    // Bygger siden forfra ud fra dens builder. Sider uden builder forbliver uændrede.
+    public void rebuild() {
+        if (builder == null) return;
+        clearOptions();
+        builder.run();
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getTitle() {
+        return this.title;
+    }
+
+
 
 
 

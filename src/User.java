@@ -1,3 +1,5 @@
+import util.TextUI;
+
 import java.util.ArrayList;
 
 public class User {
@@ -23,6 +25,7 @@ public class User {
     public void addSaved(Media media) {
         if (media != null) {
             savedMedia.add(media);
+            TextUI.userMessage("Added '" + media.name + "' to your saved media!");
         }
     }
     // getter
@@ -35,10 +38,15 @@ public class User {
         return savedMedia;
     }
 
+    public boolean hasSaved(Media media) {
+        return this.savedMedia.contains(media);
+    }
+
     // sletter users watchedHistory Array
     public void clearHistory() {
         history.clear();
         }
+
     public String getPasswordHash() {
         return this.passwordHash;
     }
@@ -51,6 +59,7 @@ public class User {
     //Fjerner en media fra savedMedia
     public void deleteFromSaved(Media media){
         savedMedia.remove(media);
+        TextUI.userMessage("Removed '" + media.name + "' from your saved media!");
     }
     public String getName() {
         return this.name;
