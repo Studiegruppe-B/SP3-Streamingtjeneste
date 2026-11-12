@@ -5,7 +5,6 @@ import util.PasswordEncryption;
 import util.TextUI;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -30,6 +29,7 @@ public class StreamingService {
     private final PageTemplate searchPage = new PageTemplate("Search Page");
     private final PageTemplate mediaPage = new PageTemplate("Media Page");
     private final PageTemplate episodePage = new PageTemplate("Episode Page");
+    private final PageTemplate categoryPage = new PageTemplate("Category Page");
     private final PageTemplate savedPage = new PageTemplate("Saved Videos");
     private final PageTemplate historyPage = new PageTemplate("History Page");
 
@@ -47,16 +47,16 @@ public class StreamingService {
     }
 
     private void buildMenu() {
-        startPage.addSingleOptions(new String[]{"Exit", "Goto homepage", "Log in", "Sign up"},
+        startPage.addSingleOptions(new String[]{"Exit","Log in", "Sign up"},
                 this::endSession,
-                () -> pageBuilder.goTo(homePage),
                 this::login,
                 this::signUp
         );
 
-        homePage.addSingleOptions(new String[]{"Exit", "Search", "Saved", "History"},
+        homePage.addSingleOptions(new String[]{"Exit", "Search", "Categories", "Saved", "History"},
                 this::endSession,
                 this::openSearch,
+                this::openCategory,
                 this::openSaved,
                 this::openHistory
         );
@@ -77,6 +77,23 @@ public class StreamingService {
             savedPage.addListOptions(titles.stream().map(Media::getName).toList(), i -> openMedia(titles.get(i)));
         });
         pageBuilder.goTo(savedPage);
+    }
+
+    private void openCategory() {
+        categoryPage.setBuilder(()-> {
+            categoryPage.addSingleOptions("Back",()->pageBuilder.back());
+            String[] genreList = {"Action", "Adventure", "Biography", "Comedy", "Crime",
+                    "Drama", "Family", "Fantasy", "Film-Noir", "History",
+                    "Horror", "Music", "Musical", "Mystery", "Romance",
+                    "Sci-fi", "Sport", "Thriller", "War", "Western"};
+
+            categoryPage.addListOptions(Arrays.stream(genreList).toList(), i -> openSearch(getMediaByCategory(genreList[i]))
+            );
+        } );
+
+
+
+        pageBuilder.goTo(categoryPage);
     }
 
     private void openHistory() {
@@ -106,6 +123,16 @@ public class StreamingService {
         searchPage.setBuilder(() -> {
             searchPage.addSingleOptions(new String[]{"Back"}, pageBuilder::back);
             searchPage.addListOptions(titles.stream().map(Media::getName).toList(), i -> openMedia(titles.get(i)));
+        });
+        pageBuilder.goTo(searchPage);
+    }
+
+    private void openSearch(ArrayList<Media> media) {
+
+        // The query is asked once, outside the builder, so rebuilding doesn't prompt again.
+        searchPage.setBuilder(() -> {
+            searchPage.addSingleOptions(new String[]{"Back"}, pageBuilder::back);
+            searchPage.addListOptions(media.stream().map(Media::getName).toList(), i -> openMedia(media.get(i)));
         });
         pageBuilder.goTo(searchPage);
     }
