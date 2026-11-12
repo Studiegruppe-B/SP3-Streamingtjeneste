@@ -4,12 +4,10 @@ import java.util.ArrayList;
 
 public class User {
     private String name;
-    private String passwordHash;
     ArrayList<Media> history;
     ArrayList<Media> savedMedia;
 
-    public User(String name, String passwordHash, ArrayList<Media> history, ArrayList<Media> savedMedia) {
-        this.passwordHash = passwordHash;
+    public User(String name, ArrayList<Media> history, ArrayList<Media> savedMedia) {
         this.name = name;
         this.history = history;
         this.savedMedia = savedMedia;
@@ -47,9 +45,6 @@ public class User {
         history.clear();
         }
 
-    public String getPasswordHash() {
-        return this.passwordHash;
-    }
 
     //fjerner en media fra watchedHistory Array
     public void deleteFromHistory(Media media){
