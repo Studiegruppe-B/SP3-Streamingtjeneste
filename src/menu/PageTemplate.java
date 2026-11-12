@@ -27,6 +27,11 @@ public class PageTemplate {
         this.action.addAll(List.of(newActions));
     }
 
+    public void addSingleOptions(String text, Runnable newAction) {
+        this.options.add(text);
+        this.action.add(newAction);
+    }
+
     // Hele listen får én lambda. i = placering i listen
     public void addListOptions(List<String> texts, Consumer<Integer> sharedAction) {
         for (int i = 0; i < texts.size(); i++) {

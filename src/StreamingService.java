@@ -33,20 +33,6 @@ public class StreamingService {
     private final PageTemplate savedPage = new PageTemplate("Saved Videos");
     private final PageTemplate historyPage = new PageTemplate("History Page");
 
-    /*
-    private final PageTemplate filterPage = new PageTemplate();
-    private final PageTemplate genrePage = new PageTemplate();
-    private final PageTemplate watchedPage = new PageTemplate();
-    private final PageTemplate savedPage = new PageTemplate();
-    private final PageTemplate mediaPage = new PageTemplate();
-    private final PageTemplate inWatchedPage = new PageTemplate();
-    private final PageTemplate inGenrePage = new PageTemplate();
-    private final PageTemplate inSavedPage = new PageTemplate();
-    private final PageTemplate seasonPage = new PageTemplate();
-    private final PageTemplate savedSeasonPage = new PageTemplate();
-    private final PageTemplate normalPlayablePage = new PageTemplate();
-    private final PageTemplate SavedPlayablePage = new PageTemplate();*/
-
     public StreamingService(String name) {
         this.name = name;
     }
