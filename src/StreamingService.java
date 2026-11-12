@@ -11,7 +11,9 @@ import java.util.HashMap;
 import java.util.List;
 
 public class StreamingService {
-    private final String DEFAULT_SAVE_HEADER = "Password; History; Saved";
+    private final String USER_SAVE_HEADER = "Password";
+    private final String USER_MEDIA_HEADER = "History; Saved";
+    private final String DEFUALT_USER_PATH = "data/user/";
     private final int MINIMUM_PASSWORD_LENGTH = 6;
     private final int MINIMUM_SEARCH_LENGTH = 1;
 
@@ -19,6 +21,7 @@ public class StreamingService {
     private final ArrayList<Media> media = new ArrayList<>();
     private final HashMap<String, Media> mediaById = new HashMap<>();
     private User user;
+
 
     // Menu page templates
     private PageBuilder pageBuilder = new PageBuilder();
@@ -190,7 +193,7 @@ public class StreamingService {
 
     public boolean checkCredentials(String username, String password){
         try {
-            String correctPassword = FileIO.readData("data/" + username + ".csv", true).getFirst().split(";")[0];
+            String correctPassword = FileIO.readData(DEFUALT_USER_PATH + username + ".csv", true).getFirst().split(";")[0];
             return PasswordEncryption.checkPassword(password.toCharArray(), correctPassword);
         } catch (Exception e) {
             System.out.println("User does not exist!");
@@ -203,15 +206,18 @@ public class StreamingService {
             throw new IllegalArgumentException("Password length must be greater than 6");
         }
         // Pre-define save path.
-        String userPath = "data/" + username + ".csv";
+        String userPath = DEFUALT_USER_PATH + username + ".csv";
+        String userMediaPath = DEFUALT_USER_PATH + username + "stored_media.csv";
 
         // Create new user save file.
         try {
             FileIO.createFile(userPath);
+            FileIO.createFile(userMediaPath);
 
             // Write password to file.
             try {
-                FileIO.saveData(userPath, Arrays.asList(PasswordEncryption.createStoredKey(password.toCharArray())), DEFAULT_SAVE_HEADER);
+                FileIO.saveData(userPath, Arrays.asList(PasswordEncryption.createStoredKey(password.toCharArray())), USER_SAVE_HEADER);
+                FileIO.saveData(userMediaPath, Arrays.asList("; "), USER_MEDIA_HEADER); //", " Undgår crash ved tom fil
             } catch (Exception e) {
                 System.out.println("Could not encrypt password!");
             }
@@ -224,34 +230,33 @@ public class StreamingService {
         String history = String.join("," , user.getHistory().stream().map(Media::getId).toList());
         String saved = String.join(",", user.getSavedMedia().stream().map(Media::getId).toList());
 
-        FileIO.saveData("data/" + user.getName() + ".csv", List.of(user.getPasswordHash() + "; " + history + "; " + saved), DEFAULT_SAVE_HEADER);
+        FileIO.saveData(DEFUALT_USER_PATH + user.getName() + "stored_media.csv", List.of(history+"; "+saved), USER_MEDIA_HEADER);
     }
 
     public User loadUser(String username) {
-        // Read user data.
-        String[] parts = FileIO.readData("data/" + username + ".csv", true).getFirst().split(";");
-
-        // Assign passwordHash variable.
-        String passwordHash = parts[0].trim();
-
-        // Parsed 'watched' data, and add to ArrayList
         ArrayList<Media> watched = new ArrayList<>();
-        if (parts.length > 1 && !parts[1].isBlank()) {
-            for (String id : parts[1].trim().split(",")) {
-                Media m = getMediaById(id.trim());
-                if (m != null) watched.add(m);
+        ArrayList<Media> saved = new ArrayList<>();
+
+        ArrayList<String> mediaLines = FileIO.readData(DEFUALT_USER_PATH + username + "stored_media.csv", true);
+        if (!mediaLines.isEmpty()) {
+            String[] stored = mediaLines.getFirst().split(";");
+
+            if (stored.length > 0 && !stored[0].isBlank()) {
+                for (String id : stored[0].trim().split(",")) {
+                    Media m = getMediaById(id.trim());
+                    if (m != null) watched.add(m);
+                }
+            }
+
+            if (stored.length > 1 && !stored[1].isBlank()) {
+                for (String id : stored[1].trim().split(",")) {
+                    Media s = getMediaById(id.trim());
+                    if (s != null) saved.add(s);
+                }
             }
         }
 
-        // Parsed 'saved' data, and add to ArrayList
-        ArrayList<Media> saved = new ArrayList<>();
-        if (parts.length > 2 && !parts[2].isBlank()) {
-            for (String id : parts[2].trim().split(",")) {
-                Media s = getMediaById(id.trim());
-                if (s != null) saved.add(s);
-            }
-        }
-        return new User(username, passwordHash, watched, saved);
+        return new User(username, watched, saved);
     }
 
     public ArrayList<Media> getMediaByName(String search) {
