@@ -1,4 +1,5 @@
 @startuml
+hide empty members
 class Main{
 + static void main(String[] args)
 
@@ -8,6 +9,15 @@ class StreamingService{
 - String name
 - User user
 - ArrayList<Media>
+
+- startPage : PageTemplate {readOnly}
+- homePage : PageTemplate {readOnly}
+- searchPage : PageTemplate {readOnly}
+- mediaPage : PageTemplate {readOnly}
+- episodePage : PageTemplate {readOnly}
+- savedPage : PageTemplate {readOnly}
+- historyPage : PageTemplate {readOnly}
+
 + void start()
 - ArrayList<Media> getMediaByName()
 - ArrayList<Media> getMediaByCategory()
@@ -22,10 +32,19 @@ class StreamingService{
 
 - void addMedia(Media)
 - ArrayList<Media> getMedia()
+
+- void buildMenu()
+- void endSession()
+- void openSaved()
+- void openCategory()
+- void openHistory()
+- void openSearch()
+- void openSearch(Arraylist<Media>)
+- void openMedia(Media)
+- void openEpisode(Episode)
+- void logIn()
+- void signUp()
 }
-
-
-
 
 abstract class Media{
 # String name
@@ -88,11 +107,6 @@ class PageTemplate{
 + void setTitle(String)
 + String getTitle()
 }
-
-class MenuDisplay{
-- final PageBuilder builder
-+ void showMenu()
-}
 }
 
 
@@ -139,16 +153,13 @@ class PasswordEncryption{
 + {static} String createStoredKey(char[])
 + {static} boolean checkPassword(char[], String)
 }
-
-
-
-
 }
 
 Main *-- StreamingService
 StreamingService *-- Media
-StreamingService *-- FileIO
-StreamingService *-- TexUI
+StreamingService --> FileIO
+StreamingService --> TexUI
+StreamingService --> PasswordEncryption
 StreamingService *-- User
 StreamingService *-- PageBuilder
 StreamingService *-- PageTemplate
@@ -157,9 +168,7 @@ PageBuilder --> TexUI
 Media <|-- Movie
 Media <|-- Series
 Series *-- Episode
-StreamingService *-- PasswordEncryption
-MenuDisplay *-- PageBuilder
-MenuDisplay --> PageTemplate
-MenuDisplay --> TexUI
+
+
 
 @enduml
