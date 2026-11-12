@@ -12,6 +12,7 @@ public class PageTemplate {
 
     private final ArrayList<Runnable> action = new ArrayList<>();
     private final ArrayList<String> options = new ArrayList<>();
+    private Runnable builder;
 
     public PageTemplate(String title) {
         this.title = title;
@@ -48,6 +49,18 @@ public class PageTemplate {
     public void clearOptions() {
         options.clear();
         action.clear();
+    }
+
+    // Sætter den lambda, der bygger sidens options, hver gang siden vises.
+    public void setBuilder(Runnable builder) {
+        this.builder = builder;
+    }
+
+    // Bygger siden forfra ud fra dens builder. Sider uden builder forbliver uændrede.
+    public void rebuild() {
+        if (builder == null) return;
+        clearOptions();
+        builder.run();
     }
 
     public void setTitle(String title) {

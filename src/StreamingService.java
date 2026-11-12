@@ -84,18 +84,22 @@ public class StreamingService {
     }
 
     private void openSaved() {
-        ArrayList<Media> titles = user.getSavedMedia();
+        savedPage.setBuilder(() -> {
+            ArrayList<Media> titles = user.getSavedMedia();
 
-        savedPage.addSingleOptions(new String[]{"Back"}, pageBuilder::back);
-        savedPage.addListOptions(titles.stream().map(Media::getName).toList(), i -> openMedia(titles.get(i)));
+            savedPage.addSingleOptions(new String[]{"Back"}, pageBuilder::back);
+            savedPage.addListOptions(titles.stream().map(Media::getName).toList(), i -> openMedia(titles.get(i)));
+        });
         pageBuilder.goTo(savedPage);
     }
 
     private void openHistory() {
-        ArrayList<Media> titles = user.getHistory();
+        historyPage.setBuilder(() -> {
+            ArrayList<Media> titles = user.getHistory();
 
-        historyPage.addSingleOptions(new String[]{"Back", "Clear History"}, pageBuilder::back, () -> {this.user.clearHistory(); pageBuilder.back();});
-        historyPage.addListOptions(titles.stream().map(Media::getName).toList(), i -> openMedia(titles.get(i)));
+            historyPage.addSingleOptions(new String[]{"Back", "Clear History"}, pageBuilder::back, () -> {this.user.clearHistory(); pageBuilder.back();});
+            historyPage.addListOptions(titles.stream().map(Media::getName).toList(), i -> openMedia(titles.get(i)));
+        });
         pageBuilder.goTo(historyPage);
     }
 
@@ -112,32 +116,39 @@ public class StreamingService {
             return;
         }
 
-        searchPage.addSingleOptions(new String[]{"Back"}, pageBuilder::back);
-        searchPage.addListOptions(titles.stream().map(Media::getName).toList(), i -> openMedia(titles.get(i)));
+        // The query is asked once, outside the builder, so rebuilding doesn't prompt again.
+        searchPage.setBuilder(() -> {
+            searchPage.addSingleOptions(new String[]{"Back"}, pageBuilder::back);
+            searchPage.addListOptions(titles.stream().map(Media::getName).toList(), i -> openMedia(titles.get(i)));
+        });
         pageBuilder.goTo(searchPage);
     }
 
     // Builds the media page: a play option for movies, an episode list for series.
     private void openMedia(Media media) {
-        mediaPage.addSingleOptions(new String[]{"Back"}, pageBuilder::back);
+        mediaPage.setBuilder(() -> {
+            mediaPage.addSingleOptions(new String[]{"Back"}, pageBuilder::back);
 
-        if (!this.user.hasSaved(media)) {
-            mediaPage.addSingleOptions(new String[]{"Save"}, () -> {this.user.addSaved(media); pageBuilder.destroy(); openMedia(media); return;});
-        } else {
-            mediaPage.addSingleOptions(new String[]{"Unsave"}, () -> {this.user.deleteFromSaved(media); pageBuilder.back();});
-        }
+            if (!this.user.hasSaved(media)) {
+                mediaPage.addSingleOptions(new String[]{"Save"}, () -> this.user.addSaved(media));
+            } else {
+                mediaPage.addSingleOptions(new String[]{"Unsave"}, () -> this.user.deleteFromSaved(media));
+            }
 
-        if (media instanceof Movie movie) {
-            mediaPage.addSingleOptions(new String[]{"Play"}, () -> {movie.play(); this.user.addHistory(movie);});
-        } else if (media instanceof Series series) {
-            ArrayList<Episode> episodes = series.getEpisodes();
-            mediaPage.addListOptions(episodes.stream().map(Episode::getName).toList(), i -> openEpisode(episodes.get(i)));
-        }
+            if (media instanceof Movie movie) {
+                mediaPage.addSingleOptions(new String[]{"Play"}, () -> {movie.play(); this.user.addHistory(movie);});
+            } else if (media instanceof Series series) {
+                ArrayList<Episode> episodes = series.getEpisodes();
+                mediaPage.addListOptions(episodes.stream().map(Episode::getName).toList(), i -> openEpisode(episodes.get(i)));
+            }
+        });
         pageBuilder.goTo(mediaPage);
     }
 
     private void openEpisode(Episode episode) {
-        episodePage.addSingleOptions(new String[]{"Back", "Play"}, pageBuilder::back, episode::play);
+        episodePage.setBuilder(() ->
+                episodePage.addSingleOptions(new String[]{"Back", "Play"}, pageBuilder::back, episode::play)
+        );
         pageBuilder.goTo(episodePage);
     }
 
