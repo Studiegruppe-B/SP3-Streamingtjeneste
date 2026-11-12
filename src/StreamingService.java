@@ -31,6 +31,7 @@ public class StreamingService {
     private final PageTemplate mediaPage = new PageTemplate("Media Page");
     private final PageTemplate episodePage = new PageTemplate("Episode Page");
     private final PageTemplate savedPage = new PageTemplate("Saved Videos");
+    private final PageTemplate historyPage = new PageTemplate("History Page");
 
     /*
     private final PageTemplate filterPage = new PageTemplate();
@@ -67,10 +68,11 @@ public class StreamingService {
                 this::signUp
         );
 
-        homePage.addSingleOptions(new String[]{"Exit", "Search", "Saved"},
+        homePage.addSingleOptions(new String[]{"Exit", "Search", "Saved", "History"},
                 this::endSession,
                 this::openSearch,
-                this::openSaved
+                this::openSaved,
+                this::openHistory
         );
 
         pageBuilder.select(startPage);
@@ -87,6 +89,14 @@ public class StreamingService {
         savedPage.addSingleOptions(new String[]{"Back"}, pageBuilder::back);
         savedPage.addListOptions(titles.stream().map(Media::getName).toList(), i -> openMedia(titles.get(i)));
         pageBuilder.goTo(savedPage);
+    }
+
+    private void openHistory() {
+        ArrayList<Media> titles = user.getHistory();
+
+        historyPage.addSingleOptions(new String[]{"Back", "Clear History"}, pageBuilder::back, () -> {this.user.clearHistory(); pageBuilder.back();});
+        historyPage.addListOptions(titles.stream().map(Media::getName).toList(), i -> openMedia(titles.get(i)));
+        pageBuilder.goTo(historyPage);
     }
 
 
@@ -117,7 +127,7 @@ public class StreamingService {
             } else {
                 mediaPage.addSingleOptions(new String[]{"Unsave"}, () -> {this.user.deleteFromSaved(movie); pageBuilder.back();});
             }
-            mediaPage.addSingleOptions(new String[]{"Play"}, movie::play);
+            mediaPage.addSingleOptions(new String[]{"Play"}, () -> {movie.play(); this.user.addHistory(movie);});
         } else if (media instanceof Series series) {
             ArrayList<Episode> episodes = series.getEpisodes();
             mediaPage.addListOptions(episodes.stream().map(Episode::getName).toList(), i -> openEpisode(episodes.get(i)));
