@@ -13,6 +13,7 @@ import java.util.List;
 public class StreamingService {
     private final String USER_SAVE_HEADER = "Password";
     private final String USER_MEDIA_HEADER = "History; Saved";
+    private final String DEFUALT_USER_PATH = "data/user/";
     private final int MINIMUM_PASSWORD_LENGTH = 6;
     private final int MINIMUM_SEARCH_LENGTH = 1;
 
@@ -20,6 +21,7 @@ public class StreamingService {
     private final ArrayList<Media> media = new ArrayList<>();
     private final HashMap<String, Media> mediaById = new HashMap<>();
     private User user;
+
 
     // Menu page templates
     private PageBuilder pageBuilder = new PageBuilder();
@@ -191,7 +193,7 @@ public class StreamingService {
 
     public boolean checkCredentials(String username, String password){
         try {
-            String correctPassword = FileIO.readData("data/" + username + ".csv", true).getFirst().split(";")[0];
+            String correctPassword = FileIO.readData(DEFUALT_USER_PATH + username + ".csv", true).getFirst().split(";")[0];
             return PasswordEncryption.checkPassword(password.toCharArray(), correctPassword);
         } catch (Exception e) {
             System.out.println("User does not exist!");
@@ -204,8 +206,8 @@ public class StreamingService {
             throw new IllegalArgumentException("Password length must be greater than 6");
         }
         // Pre-define save path.
-        String userPath = "data/" + username + ".csv";
-        String userMediaPath = "data/"+username+"stored_media.csv";
+        String userPath = DEFUALT_USER_PATH + username + ".csv";
+        String userMediaPath = DEFUALT_USER_PATH + username + "stored_media.csv";
 
         // Create new user save file.
         try {
@@ -228,14 +230,14 @@ public class StreamingService {
         String history = String.join("," , user.getHistory().stream().map(Media::getId).toList());
         String saved = String.join(",", user.getSavedMedia().stream().map(Media::getId).toList());
 
-        FileIO.saveData("data/" + user.getName() + "stored_media.csv", List.of(history+"; "+saved), USER_MEDIA_HEADER);
+        FileIO.saveData(DEFUALT_USER_PATH + user.getName() + "stored_media.csv", List.of(history+"; "+saved), USER_MEDIA_HEADER);
     }
 
     public User loadUser(String username) {
         ArrayList<Media> watched = new ArrayList<>();
         ArrayList<Media> saved = new ArrayList<>();
 
-        ArrayList<String> mediaLines = FileIO.readData("data/" + username + "stored_media.csv", true);
+        ArrayList<String> mediaLines = FileIO.readData(DEFUALT_USER_PATH + username + "stored_media.csv", true);
         if (!mediaLines.isEmpty()) {
             String[] stored = mediaLines.getFirst().split(";");
 
