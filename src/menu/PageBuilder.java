@@ -21,6 +21,11 @@ public class PageBuilder {
         current = history.pop();
     }
 
+    public void destroy() {
+        current.clearOptions();
+        history.removeLast();
+    }
+
     public void exit() {
         running = false;
     }

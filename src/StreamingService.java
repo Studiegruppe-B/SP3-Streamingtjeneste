@@ -121,12 +121,13 @@ public class StreamingService {
     private void openMedia(Media media) {
         mediaPage.addSingleOptions(new String[]{"Back"}, pageBuilder::back);
 
+        if (!this.user.hasSaved(media)) {
+            mediaPage.addSingleOptions(new String[]{"Save"}, () -> {this.user.addSaved(media); pageBuilder.destroy(); openMedia(media); return;});
+        } else {
+            mediaPage.addSingleOptions(new String[]{"Unsave"}, () -> {this.user.deleteFromSaved(media); pageBuilder.back();});
+        }
+
         if (media instanceof Movie movie) {
-            if (!this.user.hasSaved(movie)) {
-                mediaPage.addSingleOptions(new String[]{"Save"}, () -> {this.user.addSaved(movie); pageBuilder.back();});
-            } else {
-                mediaPage.addSingleOptions(new String[]{"Unsave"}, () -> {this.user.deleteFromSaved(movie); pageBuilder.back();});
-            }
             mediaPage.addSingleOptions(new String[]{"Play"}, () -> {movie.play(); this.user.addHistory(movie);});
         } else if (media instanceof Series series) {
             ArrayList<Episode> episodes = series.getEpisodes();
@@ -136,7 +137,7 @@ public class StreamingService {
     }
 
     private void openEpisode(Episode episode) {
-        episodePage.addSingleOptions(new String[]{"Back", "Play", "Save"}, pageBuilder::back, episode::play, () -> this.user.addSaved(episode.getSeries()));
+        episodePage.addSingleOptions(new String[]{"Back", "Play"}, pageBuilder::back, episode::play);
         pageBuilder.goTo(episodePage);
     }
 
